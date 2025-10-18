@@ -1,0 +1,52 @@
+# Kotlin / Android .gitignore
+
+# Built application files
+*.apk
+*.ap_
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+build/
+
+# Gradle files
+.gradle/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local configuration files (Android Studio)
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Log/temporary files
+*.log
+*.tmp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Keystore files (don't upload your signing keys!)
+*.jks
+*.keystore
+
+# Environment files
+local.properties
+
+# Crashlytics/Firebase
+crashlytics-build.properties
+
+# Kotlin specific
+*.kotlin_module
+
+# VSCode settings (if you use it)
+.vscode/
