@@ -67,4 +67,25 @@ Incluye las siguientes pantallas:
 ---
 
 ## 📁 Estructura del Repositorio
+---
+
+##  Avances en la Rama `david-home-screen`
+
+### 🧩 Implementaciones realizadas
+- Se creó la **pantalla de Inicio (HomeScreen)** según el diseño del Figma.
+- Se añadió una **barra de búsqueda** en la parte superior (aún sin funcionalidad completa).
+- Se implementaron **íconos circulares de funciones destacadas**:
+    - Comparar candidatos (comparar perfiles y propuestas lado a lado).
+    -  Noticias.
+    -  Fuentes oficiales.
+- Se configuró la navegación en `AppNavHost.kt` con rutas básicas hacia las vistas principales.
+- Se dejó preparado el espacio para la futura lista de candidatos.
+
+### 🚀 Próximos pasos
+- Implementar la pantalla **Búsqueda de Candidatos**.
+- Conectar la barra de búsqueda con la navegación.
+- Añadir navegación funcional a los íconos de “Funciones destacadas”.
+
+---
+
 
