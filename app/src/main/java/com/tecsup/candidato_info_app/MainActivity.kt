@@ -10,12 +10,12 @@ import androidx.navigation.compose.rememberNavController // ¡MUY IMPORTANTE par
 
 // La importación de tu NavHost y Tema
 import com.tecsup.candidato_info_app.navigation.AppNavHost
-import com.tecsup.candidato_info_app.ui.theme.CandidatoinfoappTheme
+import com.tecsup.candidato_info_app.ui.theme.CandidatoInfoTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CandidatoinfoappTheme { // Tu tema
+            CandidatoInfoTheme { // Tu tema
                 val navController = rememberNavController()
                 AppNavHost(navController = navController) // Usar el NavHost
             }
