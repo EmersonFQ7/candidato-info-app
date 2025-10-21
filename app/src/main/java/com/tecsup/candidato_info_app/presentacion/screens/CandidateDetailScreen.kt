@@ -16,12 +16,35 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.tecsup.candidato_info_app.presentacion.viewmodel.CandidateViewModel
 import com.tecsup.candidato_info_app.ui.theme.*
+import com.tecsup.candidato_info_app.data.model.Candidato
+import com.tecsup.candidato_info_app.data.model.HistorialPolitico
+import com.tecsup.candidato_info_app.data.model.Proyecto
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
+import com.tecsup.candidato_info_app.R
+
 
 @Composable
-fun CandidateDetailScreen(navController: NavHostController, candidateId: String) {
+fun CandidateDetailScreen(
+    navController: NavHostController,
+    candidateId: String,
+    viewModel: CandidateViewModel = viewModel()
+) {
     var selectedTab by remember { mutableStateOf(0) }
+
+    // <CHANGE> Cargar candidato del ViewModel
+    LaunchedEffect(candidateId) {
+        viewModel.getCandidatoById(candidateId)
+    }
+
+
+    val candidate by viewModel.candidato.collectAsState()
 
     Column(
         modifier = Modifier
@@ -62,164 +85,173 @@ fun CandidateDetailScreen(navController: NavHostController, candidateId: String)
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
-            // Candidate Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceLight),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+            candidate?.let { cand ->
+                // Candidate Card
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = SurfaceLight),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
-                    // Avatar
-                    Box(
+                    Column(
                         modifier = Modifier
-                            .size(100.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFE5A76F)),
-                        contentAlignment = Alignment.Center
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("👤", fontSize = androidx.compose.ui.unit.TextUnit(48f, androidx.compose.ui.unit.TextUnitType.Sp))
-                    }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Text(
-                        text = "María Elena Rodríguez Vargas",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = Black
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.height(32.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue),
-                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
-                    ) {
-                        Text(
-                            text = "Alianza para el Progreso",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = White
+                        // Avatar
+                        Image(
+                            painter = painterResource(id = R.drawable.rafael_lopez),
+                            contentDescription = "Foto de Rafael López Aliaga",
+                            modifier = Modifier
+                                .size(100.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
                         )
-                    }
 
-                    Spacer(modifier = Modifier.height(8.dp))
 
-                    Text(
-                        text = "Congresista",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MediumGray
-                    )
+                        Spacer(modifier = Modifier.height(12.dp))
 
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text("📍", fontSize = androidx.compose.ui.unit.TextUnit(16f, androidx.compose.ui.unit.TextUnitType.Sp))
-                        Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "Lima",
+                            text = cand.nombre,
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Black
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Button(
+                            onClick = { },
+                            modifier = Modifier.height(32.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue),
+                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
+                        ) {
+                            Text(
+                                text = cand.partido,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = White
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = cand.cargo,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MediumGray
                         )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text("📍", fontSize = androidx.compose.ui.unit.TextUnit(16f, androidx.compose.ui.unit.TextUnitType.Sp))
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "${cand.ciudad}, ${cand.region}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MediumGray
+                            )
+                        }
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            // Status Alert
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFECFDF5)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                // Status Alert
+                val hasDenuncias = cand.denuncias.isNotEmpty()
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (hasDenuncias) Color(0xFFFEE2E2) else Color(0xFFECFDF5)
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
                 ) {
-                    Text("✓", fontSize = androidx.compose.ui.unit.TextUnit(20f, androidx.compose.ui.unit.TextUnitType.Sp), color = SuccessGreen)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "No se registran denuncias o investigaciones activas",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = SuccessGreen
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            if (hasDenuncias) "⚠" else "✓",
+                            fontSize = androidx.compose.ui.unit.TextUnit(20f, androidx.compose.ui.unit.TextUnitType.Sp),
+                            color = if (hasDenuncias) ErrorRed else SuccessGreen
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = if (hasDenuncias) "Tiene ${cand.denuncias.size} denuncia(s) registrada(s)" else "No se registran denuncias o investigaciones activas",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = if (hasDenuncias) ErrorRed else SuccessGreen
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // Tabs
+                TabRow(
+                    selectedTabIndex = selectedTab,
+                    modifier = Modifier.fillMaxWidth(),
+                    containerColor = BackgroundLight,
+                    contentColor = PrimaryBlue
+                ) {
+                    Tab(
+                        selected = selectedTab == 0,
+                        onClick = { selectedTab = 0 },
+                        text = { Text("Proyectos") }
+                    )
+                    Tab(
+                        selected = selectedTab == 1,
+                        onClick = { selectedTab = 1 },
+                        text = { Text("Historial") }
+                    )
+                    Tab(
+                        selected = selectedTab == 2,
+                        onClick = { selectedTab = 2 },
+                        text = { Text("Fuentes") }
                     )
                 }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Tab Content
+                when (selectedTab) {
+                    0 -> ProjectsTabContent(cand.proyectos)
+                    1 -> HistorialTabContent(cand.historialPolitico)
+                    2 -> FuentesTabContent()
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Compare Button
+                Button(
+                    onClick = { },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = "Comparar con otros candidatos",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = White
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
             }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Tabs
-            TabRow(
-                selectedTabIndex = selectedTab,
-                modifier = Modifier.fillMaxWidth(),
-                containerColor = BackgroundLight,
-                contentColor = PrimaryBlue
-            ) {
-                Tab(
-                    selected = selectedTab == 0,
-                    onClick = { selectedTab = 0 },
-                    text = { Text("Proyectos") }
-                )
-                Tab(
-                    selected = selectedTab == 1,
-                    onClick = { selectedTab = 1 },
-                    text = { Text("Historial") }
-                )
-                Tab(
-                    selected = selectedTab == 2,
-                    onClick = { selectedTab = 2 },
-                    text = { Text("Fuentes") }
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Tab Content
-            when (selectedTab) {
-                0 -> ProjectsTabContent()
-                1 -> HistorialTabContent()
-                2 -> FuentesTabContent()
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Compare Button
-            Button(
-                onClick = { },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text(
-                    text = "Comparar con otros candidatos",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = White
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
 @Composable
-fun ProjectsTabContent() {
+fun ProjectsTabContent(proyectos: List<Proyecto>) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "Proyectos y Propuestas",
@@ -230,23 +262,17 @@ fun ProjectsTabContent() {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        val projects = listOf(
-            "Ley de Transparencia en Contrataciones Públicas",
-            "Proyecto de Modernización Educativa",
-            "Iniciativa de Protección Ambiental Urbana"
-        )
-
-        projects.forEach { project ->
+        proyectos.forEach { proyecto ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("✓", fontSize = androidx.compose.ui.unit.TextUnit(18f, androidx.compose.ui.unit.TextUnitType.Sp), color = SuccessGreen)
+                Text("✓", fontSize = 18.sp, color = SuccessGreen)
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = project,
+                    text = proyecto.nombre, // Usa el nombre del proyecto
                     style = MaterialTheme.typography.bodySmall,
                     color = DarkGray,
                     modifier = Modifier.weight(1f)
@@ -257,7 +283,7 @@ fun ProjectsTabContent() {
 }
 
 @Composable
-fun HistorialTabContent() {
+fun HistorialTabContent(historial: List<HistorialPolitico>) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "Historial Político",
@@ -268,32 +294,31 @@ fun HistorialTabContent() {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        val positions = listOf(
-            "Regidora Municipal de San Isidro (2015-2018)",
-            "Asesora del Ministerio de Educación (2019-2021)",
-            "Congresista de la República (2021-presente)"
-        )
-
-        positions.forEach { position ->
-            Row(
+        historial.forEach { position ->
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(vertical = 8.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(8.dp)
-                        .clip(CircleShape)
-                        .background(PrimaryBlue)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = position,
+                    text = "${position.cargo} - ${position.institucion}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = DarkGray
+                )
+                Text(
+                    text = "${position.fechaInicio} - ${position.fechaFin ?: "Presente"}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MediumGray
+                )
+                Text(
+                    text = position.descripcion,
                     style = MaterialTheme.typography.bodySmall,
                     color = DarkGray
                 )
             }
+
+            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 }

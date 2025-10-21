@@ -65,6 +65,52 @@ Incluye las siguientes pantallas:
 - Comparación
 
 ---
+# DÍA 2: Estructura Base del Proyecto y Navegación
+
+El objetivo del Día 2 fue crear la base funcional del proyecto en Android Studio, establecer la estructura de carpetas (paquetes) y la navegación inicial, preparando el terreno para el desarrollo de funcionalidades.
+
+## ✅ Requerimientos Funcionales Completados
+
+| ID | Requerimiento | Estado |
+|----|---------------|---------|
+| RF06 | Creación del proyecto en Android Studio (Kotlin + Jetpack Compose). | ✔️ |
+| RF07 | Definición de estructura por paquetes (model, data, navigation, presentacion). | ✔️ |
+| RF08 | Implementación de navegación base (NavHost) entre Home, Detail y Comparison. | ✔️ |
+| RF09 | Configuración de ramas de trabajo en GitHub para la colaboración. | ✔️ |
+| RF10 | Documentación de commits con mensajes claros. | ✔️ |
+
+## 📁 Estructura del Proyecto (RF07)
+
+Se adoptó una estructura organizada, utilizando `presentacion` para la capa de UI.
+├── 📊 `data/`               *← Repositorios y lógica de datos (a desarrollar)*
+├── 🏛️ `model/`              *← Clases de datos (Candidato, Denuncia) (a desarrollar)*
+├── 🧭 `navigation/`         *← Lógica de NavHost y rutas (AppNavHost, AppScreen)*
+├── 📱 `presentacion/`       *← Capa de Interfaz de Usuario (UI)*
+│   ├── 🧩 `components/`     *← Componentes reutilizables*
+│   └── 🖥️ `screens/`        *← Pantallas principales (Home, Detail, Comparison)*
+└── 🎨 `ui.theme/`           *← Configuración de temas, colores y tipografía de Compose*
+
+## 🧭 Navegación Implementada (RF08)
+
+Se configuró Navigation Compose y se añadieron las dependencias de Gradle necesarias para asegurar un flujo de navegación funcional entre las pantallas principales.
+
+| Ruta | Descripción |
+|------|-------------|
+| `home` | Pantalla principal. |
+| `candidate_detail` | Muestra el perfil detallado. |
+| `comparison` | Pantalla para la comparación directa entre candidatos. |
+
+
+## 🌳 Configuración de Git y Flujo Colaborativo (RF09)
+
+Se ha realizado el commit final del Día 2 en `main` y se han creado las ramas de features para que el equipo comience a trabajar en paralelo de cara al Día 3.
+
+| Rama de Trabajo | Rol Principal | Tareas Asignadas (Día 3) |
+|-----------------|---------------|--------------------------|
+| `main` | Base Estable | Contiene la estructura y la navegación funcional. |
+| `feature/ui-design-sunmi` | 🎨 Sunmi (Diseñadora UI/UX) | Implementación de los componentes de Jetpack Compose y el diseño visual basado en Figma. |
+| `feature/data-model-david` | 📄 David (Documentador / Tester) | Definición y creación de las data classes necesarias en el paquete `model`. |
+| `feature/refactor-emerson` | 👨‍💻 Emerson (Líder Técnico) | Tareas de limpieza de código y gestión de dependencias/configuraciones avanzadas. |
 
 ## 📁 Estructura del Repositorio
 ---
@@ -87,5 +133,3 @@ Incluye las siguientes pantallas:
 - Añadir navegación funcional a los íconos de “Funciones destacadas”.
 
 ---
-
-

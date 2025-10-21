@@ -3,10 +3,10 @@ package com.tecsup.candidato_info_app.presentacion.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
@@ -18,33 +18,31 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.tecsup.candidato_info_app.data.CandidateRepository
 import com.tecsup.candidato_info_app.navigation.AppScreen
+import com.tecsup.candidato_info_app.presentacion.viewmodel.SearchViewModel
 import com.tecsup.candidato_info_app.ui.theme.*
 
 @Composable
-fun CandidateSearchScreen(navController: NavHostController) {
-    var searchQuery by remember { mutableStateOf("") }
-    var selectedCargo by remember { mutableStateOf("Todos los cargos") }
-    var selectedPartido by remember { mutableStateOf("Todos los partidos") }
-    var selectedRegion by remember { mutableStateOf("Todas las regiones") }
+fun CandidateSearchScreen(
+    navController: NavHostController,
+    viewModel: SearchViewModel = viewModel()
+) {
+    val searchQuery by viewModel.searchQuery.collectAsState()
+    val selectedCargo by viewModel.selectedCargo.collectAsState()
+    val selectedPartido by viewModel.selectedPartido.collectAsState()
+    val selectedRegion by viewModel.selectedRegion.collectAsState()
 
-    // Filtrar candidatos según búsqueda y filtros
-    val filteredCandidates by remember(searchQuery, selectedCargo, selectedPartido, selectedRegion) {
-        derivedStateOf {
-            CandidateRepository.candidates.filter { candidate ->
-                val matchesQuery = candidate.name.contains(searchQuery, ignoreCase = true) ||
-                        candidate.party.contains(searchQuery, ignoreCase = true) ||
-                        candidate.location.contains(searchQuery, ignoreCase = true)
-                val matchesCargo = selectedCargo == "Todos los cargos" || candidate.position == selectedCargo
-                val matchesPartido = selectedPartido == "Todos los partidos" || candidate.party == selectedPartido
-                val matchesRegion = selectedRegion == "Todas las regiones" || candidate.location == selectedRegion
+    val cargos by viewModel.cargos.collectAsState()
+    val partidos by viewModel.partidos.collectAsState()
+    val regiones by viewModel.regiones.collectAsState()
 
-                matchesQuery && matchesCargo && matchesPartido && matchesRegion
-            }
-        }
-    }
+    val candidatos by viewModel.candidatos.collectAsState()
+
+    val displayCargo = if (selectedCargo.isEmpty()) "Todos los cargos" else selectedCargo
+    val displayPartido = if (selectedPartido.isEmpty()) "Todos los partidos" else selectedPartido
+    val displayRegion = if (selectedRegion.isEmpty()) "Todas las regiones" else selectedRegion
 
     Column(
         modifier = Modifier
@@ -82,13 +80,12 @@ fun CandidateSearchScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
             // Search Bar
             TextField(
                 value = searchQuery,
-                onValueChange = { searchQuery = it },
+                onValueChange = { viewModel.updateSearchQuery(it) },
                 placeholder = { Text("Buscar por nombre, partido o región...") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -111,7 +108,7 @@ fun CandidateSearchScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Filtros
+            // Filters
             Text(
                 text = "Filtros",
                 style = MaterialTheme.typography.bodyLarge,
@@ -121,55 +118,64 @@ fun CandidateSearchScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            // <CHANGE> Conectar filtros con ViewModel
             FilterDropdown(
                 label = "Cargo",
-                selectedValue = selectedCargo,
-                options = listOf("Todos los cargos", "Candidato al Congreso", "Candidato a la Presidencia", "Candidato a la Alcaldía"),
-                onSelectionChange = { selectedCargo = it }
+                selectedValue = displayCargo,
+                options = listOf("Todos los cargos") + cargos,
+                onSelectionChange = { viewModel.updateCargo(if (it == "Todos los cargos") "" else it) }
             )
+
 
             Spacer(modifier = Modifier.height(12.dp))
 
             FilterDropdown(
                 label = "Partido",
-                selectedValue = selectedPartido,
-                options = listOf("Todos los partidos") + CandidateRepository.candidates.map { it.party }.distinct(),
-                onSelectionChange = { selectedPartido = it }
+                selectedValue = displayPartido,
+                options = listOf("Todos los partidos") + partidos,
+                onSelectionChange = { viewModel.updatePartido(if (it == "Todos los partidos") "" else it) }
             )
+
 
             Spacer(modifier = Modifier.height(12.dp))
 
             FilterDropdown(
                 label = "Región",
-                selectedValue = selectedRegion,
-                options = listOf("Todas las regiones") + CandidateRepository.candidates.map { it.location }.distinct(),
-                onSelectionChange = { selectedRegion = it }
+                selectedValue = displayRegion,
+                options = listOf("Todas las regiones") + regiones,
+                onSelectionChange = { viewModel.updateRegion(if (it == "Todas las regiones") "" else it) }
             )
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Resultados
+            // Results
             Text(
-                text = "${filteredCandidates.size} candidatos encontrados",
+                text = "${candidatos.size} candidatos encontrados",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MediumGray
             )
 
+
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Lista de candidatos
-            filteredCandidates.forEach { candidate ->
-                CandidateListItem(
-                    name = candidate.name,
-                    party = candidate.party,
-                    position = candidate.position,
-                    location = candidate.location
-                ) {
-                    // Navegar al perfil del candidato usando su ID
-                    navController.navigate(AppScreen.CandidateDetail.createRoute("2"))
+            // <CHANGE> Usar LazyColumn con datos del ViewModel
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(candidatos) { candidate ->
+                    CandidateListItem(
+                        name = candidate.nombre,
+                        party = candidate.partido,
+                        position = candidate.cargo,
+                        location = "${candidate.ciudad}, ${candidate.region}",
+                        onClick = { navController.navigate(AppScreen.CandidateDetail.createRoute(candidate.id)) }
+                    )
                 }
-                Spacer(modifier = Modifier.height(12.dp))
             }
+
+
         }
     }
 }
