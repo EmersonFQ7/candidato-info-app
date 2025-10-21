@@ -2,6 +2,7 @@ package com.tecsup.candidato_info_app.data.datasource
 
 
 import com.tecsup.candidato_info_app.data.model.*
+import com.tecsup.candidato_info_app.R
 
 object LocalDataSource {
 
@@ -233,22 +234,7 @@ object LocalDataSource {
             tieneInvestigaciones = false,
             tieneDenuncias = false
         ),
-        Candidato(
-            id = "c4",
-            nombre = "Patricia González López",
-            cargo = "Congresista",
-            partido = "Perú Libre",
-            region = "Cusco",
-            ciudad = "Cusco",
-            fotoUrl = "https://via.placeholder.com/200",
-            descripcion = "Abogada especializada en derechos humanos",
-            proyectos = emptyList(),
-            historialPolitico = emptyList(),
-            denuncias = emptyList(),
-            fuentesOficiales = emptyList(),
-            tieneInvestigaciones = false,
-            tieneDenuncias = false
-        ),
+
         Candidato(
             id = "c5",
             nombre = "Rafael López Aliaga",

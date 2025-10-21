@@ -24,7 +24,8 @@ fun AppNavHost(navController: NavHostController) {
             CandidateDetailScreen(navController, candidateId)
         }
         composable(AppScreen.Comparison.route) {
-            ComparisonScreen(navController)
+            ComparisonScreen(navController = navController)
+
         }
         composable(AppScreen.OfficialSources.route) {
             OfficialSourcesScreen(navController)
