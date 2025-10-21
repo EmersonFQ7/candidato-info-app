@@ -1,45 +1,33 @@
 package com.tecsup.candidato_info_app.navigation
 
-import androidx.navigation.*
-import androidx.navigation.compose.*
 import androidx.compose.runtime.Composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.tecsup.candidato_info_app.presentacion.screens.HomeScreen
+import com.tecsup.candidato_info_app.presentacion.screens.CandidateSearchScreen
 import com.tecsup.candidato_info_app.presentacion.screens.CandidateDetailScreen
 import com.tecsup.candidato_info_app.presentacion.screens.ComparisonScreen
-// ... (y las otras importaciones de screens)
+import com.tecsup.candidato_info_app.presentacion.screens.OfficialSourcesScreen
 
 @Composable
 fun AppNavHost(navController: NavHostController) {
-    NavHost(
-        navController = navController,
-        startDestination = AppScreen.Home.route // El inicio de la app
-    ) {
-        // 1. HOME SCREEN
+    NavHost(navController = navController, startDestination = AppScreen.Home.route) {
         composable(AppScreen.Home.route) {
-            // Pasamos funciones lambda para navegar
-            HomeScreen(
-                onNavigateToDetail = { candidateId ->
-                    navController.navigate(AppScreen.CandidateDetail.createRoute(candidateId))
-                },
-                onNavigateToComparison = {
-                    navController.navigate(AppScreen.Comparison.route)
-                }
-            )
+            HomeScreen(navController)
         }
-
-        // 2. CANDIDATE DETAIL SCREEN
-        composable(
-            route = AppScreen.CandidateDetail.route,
-            arguments = listOf(navArgument("candidateId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val candidateId = backStackEntry.arguments?.getString("candidateId") ?: "0"
-            CandidateDetailScreen(candidateId = candidateId)
+        composable(AppScreen.CandidateSearch.route) {
+            CandidateSearchScreen(navController)
         }
-
-        // 3. COMPARISON SCREEN
+        composable(AppScreen.CandidateDetail.route) { backStackEntry ->
+            val candidateId = backStackEntry.arguments?.getString("candidateId") ?: ""
+            CandidateDetailScreen(navController, candidateId)
+        }
         composable(AppScreen.Comparison.route) {
-            ComparisonScreen()
+            ComparisonScreen(navController)
+        }
+        composable(AppScreen.OfficialSources.route) {
+            OfficialSourcesScreen(navController)
         }
     }
 }
