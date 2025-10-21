@@ -16,12 +16,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.tecsup.candidato_info_app.data.model.Proyecto
+import com.tecsup.candidato_info_app.presentacion.viewmodel.ComparisonViewModel
 import com.tecsup.candidato_info_app.ui.theme.*
 
 @Composable
-fun ComparisonScreen(navController: NavHostController) {
+fun ComparisonScreen(
+    navController: NavHostController,
+    viewModel: ComparisonViewModel = viewModel()
+) {
     var selectedTab by remember { mutableStateOf(0) }
+    val candidate1 by viewModel.selectedCandidato1.collectAsState()
+    val candidate2 by viewModel.selectedCandidato2.collectAsState()
 
     Column(
         modifier = Modifier
@@ -71,79 +79,82 @@ fun ComparisonScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Candidate 1 Selector
+            // <CHANGE> Mostrar candidatos seleccionados del ViewModel
             CandidateSelectorCard(
                 label = "Candidato 1",
-                selectedCandidate = "Carlos Alberto Mendoza Silva"
+                selectedCandidate = candidate1?.nombre ?: "Selecciona un candidato"
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Candidate 2 Selector
             CandidateSelectorCard(
                 label = "Candidato 2",
-                selectedCandidate = "Jorge Luis Sánchez Prado"
+                selectedCandidate = candidate2?.nombre ?: "Selecciona un candidato"
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             // Comparison Cards
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                ComparisonCandidateCard(
-                    name = "Carlos Alberto\nMendoza Silva",
-                    party = "Fuerza Popular",
-                    position = "Alcalde Provincial",
-                    location = "Arequipa",
-                    modifier = Modifier.weight(1f)
-                )
+            if (candidate1 != null && candidate2 != null) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    ComparisonCandidateCard(
+                        name = candidate1!!.nombre,
+                        party = candidate1!!.partido,
+                        position = candidate1!!.cargo,
+                        location = "${candidate1!!.ciudad}, ${candidate1!!.region}",
 
-                ComparisonCandidateCard(
-                    name = "Jorge Luis\nSánchez Prado",
-                    party = "Acción Popular",
-                    position = "Gobernador Regional",
-                    location = "La Libertad",
-                    modifier = Modifier.weight(1f)
-                )
-            }
+                        modifier = Modifier.weight(1f)
+                    )
 
-            Spacer(modifier = Modifier.height(24.dp))
+                    ComparisonCandidateCard(
+                        name = candidate2!!.nombre,
+                        party = candidate2!!.partido,
+                        position = candidate2!!.cargo,
+                        location = "${candidate2!!.ciudad}, ${candidate2!!.region}",
 
-            // Tabs
-            TabRow(
-                selectedTabIndex = selectedTab,
-                modifier = Modifier.fillMaxWidth(),
-                containerColor = BackgroundLight,
-                contentColor = PrimaryBlue
-            ) {
-                Tab(
-                    selected = selectedTab == 0,
-                    onClick = { selectedTab = 0 },
-                    text = { Text("Proyectos") }
-                )
-                Tab(
-                    selected = selectedTab == 1,
-                    onClick = { selectedTab = 1 },
-                    text = { Text("Denuncias") }
-                )
-                Tab(
-                    selected = selectedTab == 2,
-                    onClick = { selectedTab = 2 },
-                    text = { Text("Resumen") }
-                )
-            }
+                        modifier = Modifier.weight(1f)
+                    )
+                }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-            // Tab Content
-            when (selectedTab) {
-                0 -> ComparisonProjectsTab()
-                1 -> ComparisonDenunciasTab()
-                2 -> ComparisonResumenTab()
+                // Tabs
+                TabRow(
+                    selectedTabIndex = selectedTab,
+                    modifier = Modifier.fillMaxWidth(),
+                    containerColor = BackgroundLight,
+                    contentColor = PrimaryBlue
+                ) {
+                    Tab(
+                        selected = selectedTab == 0,
+                        onClick = { selectedTab = 0 },
+                        text = { Text("Proyectos") }
+                    )
+                    Tab(
+                        selected = selectedTab == 1,
+                        onClick = { selectedTab = 1 },
+                        text = { Text("Denuncias") }
+                    )
+                    Tab(
+                        selected = selectedTab == 2,
+                        onClick = { selectedTab = 2 },
+                        text = { Text("Resumen") }
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Tab Content
+                when (selectedTab) {
+                    0 -> ComparisonProjectsTab(candidate1!!, candidate2!!)
+                    1 -> ComparisonDenunciasTab(candidate1!!, candidate2!!)
+                    2 -> ComparisonResumenTab(candidate1!!, candidate2!!)
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -271,7 +282,7 @@ fun ComparisonCandidateCard(
 }
 
 @Composable
-fun ComparisonProjectsTab() {
+fun ComparisonProjectsTab(candidate1: com.tecsup.candidato_info_app.data.model.Candidato, candidate2: com.tecsup.candidato_info_app.data.model.Candidato) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -281,27 +292,15 @@ fun ComparisonProjectsTab() {
         ) {
             ComparisonColumn(
                 title = "Proyectos",
-                items = listOf(
-                    "Plan Maestro de Desarrollo Urbano" to true,
-                    "Carretera Interoceanica Regional" to true,
-                    "Sistema de Agua Potable Rural" to true,
-                    "Red de Parques Metropolitanos" to true,
-                    "Hospitales Modulares en Zonas Alejadas" to true
-                ),
-                total = "Total: 3 proyectos",
+                items = candidate1.proyectos.map { it to true },
+                total = "Total: ${candidate1.proyectos.size} proyectos",
                 modifier = Modifier.weight(1f)
             )
 
             ComparisonColumn(
                 title = "Proyectos",
-                items = listOf(
-                    "Plan Maestro de Desarrollo Urbano" to true,
-                    "Carretera Interoceanica Regional" to true,
-                    "Sistema de Agua Potable Rural" to true,
-                    "Red de Parques Metropolitanos" to true,
-                    "Hospitales Modulares en Zonas Alejadas" to true
-                ),
-                total = "Total: 3 proyectos",
+                items = candidate2.proyectos.map { it to true },
+                total = "Total: ${candidate2.proyectos.size} proyectos",
                 modifier = Modifier.weight(1f)
             )
         }
@@ -311,7 +310,7 @@ fun ComparisonProjectsTab() {
 @Composable
 fun ComparisonColumn(
     title: String,
-    items: List<Pair<String, Boolean>>,
+    items: List<Pair<Proyecto, Boolean>>,
     total: String,
     modifier: Modifier = Modifier
 ) {
@@ -349,7 +348,7 @@ fun ComparisonColumn(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = item,
+                        text = item.nombre,
                         style = MaterialTheme.typography.labelSmall,
                         color = DarkGray,
                         fontSize = androidx.compose.ui.unit.TextUnit(11f, androidx.compose.ui.unit.TextUnitType.Sp)
@@ -370,7 +369,7 @@ fun ComparisonColumn(
 }
 
 @Composable
-fun ComparisonDenunciasTab() {
+fun ComparisonDenunciasTab(candidate1: com.tecsup.candidato_info_app.data.model.Candidato, candidate2: com.tecsup.candidato_info_app.data.model.Candidato) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -379,20 +378,12 @@ fun ComparisonDenunciasTab() {
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             DenunciasColumn(
-                items = listOf(
-                    "Investigación por presunto conflicto de intereses (2019) - En proceso" to true,
-                    "Denuncia por nepotismo (2017) - Archivada por falta de pruebas" to false,
-                    "Investigación administrativa (2018) - Sobreseída" to false
-                ),
+                items = candidate1.denuncias.map { it.descripcion to (it.estado == "En proceso") },
                 modifier = Modifier.weight(1f)
             )
 
             DenunciasColumn(
-                items = listOf(
-                    "Investigación por presunto conflicto de intereses (2019) - En proceso" to true,
-                    "Denuncia por nepotismo (2017) - Archivada por falta de pruebas" to false,
-                    "Investigación administrativa (2018) - Sobreseída" to false
-                ),
+                items = candidate2.denuncias.map { it.descripcion to (it.estado == "En proceso") },
                 modifier = Modifier.weight(1f)
             )
         }
@@ -441,7 +432,7 @@ fun DenunciasColumn(
 }
 
 @Composable
-fun ComparisonResumenTab() {
+fun ComparisonResumenTab(candidate1: com.tecsup.candidato_info_app.data.model.Candidato, candidate2: com.tecsup.candidato_info_app.data.model.Candidato) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "Resumen Comparativo",
@@ -478,13 +469,13 @@ fun ComparisonResumenTab() {
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "3",
+                            text = candidate1.proyectos.size.toString(),
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             color = PrimaryBlue
                         )
                         Text(
-                            text = "Carlos",
+                            text = candidate1.nombre.split(" ").first(),
                             style = MaterialTheme.typography.bodySmall,
                             color = MediumGray
                         )
@@ -492,13 +483,13 @@ fun ComparisonResumenTab() {
 
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "3",
+                            text = candidate2.proyectos.size.toString(),
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             color = PrimaryBlue
                         )
                         Text(
-                            text = "Jorge",
+                            text = candidate2.nombre.split(" ").first(),
                             style = MaterialTheme.typography.bodySmall,
                             color = MediumGray
                         )
@@ -522,13 +513,13 @@ fun ComparisonResumenTab() {
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "1",
+                            text = candidate1.denuncias.size.toString(),
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             color = ErrorRed
                         )
                         Text(
-                            text = "Carlos",
+                            text = candidate1.nombre.split(" ").first(),
                             style = MaterialTheme.typography.bodySmall,
                             color = MediumGray
                         )
@@ -536,13 +527,13 @@ fun ComparisonResumenTab() {
 
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "1",
+                            text = candidate2.denuncias.size.toString(),
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             color = ErrorRed
                         )
                         Text(
-                            text = "Jorge",
+                            text = candidate2.nombre.split(" ").first(),
                             style = MaterialTheme.typography.bodySmall,
                             color = MediumGray
                         )
