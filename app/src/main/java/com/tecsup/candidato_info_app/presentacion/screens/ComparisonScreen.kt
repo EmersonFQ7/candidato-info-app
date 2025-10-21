@@ -15,10 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.tecsup.candidato_info_app.data.model.Candidato
+import com.tecsup.candidato_info_app.data.model.Denuncia
 import com.tecsup.candidato_info_app.data.model.Proyecto
 import com.tecsup.candidato_info_app.presentacion.viewmodel.ComparisonViewModel
 import com.tecsup.candidato_info_app.ui.theme.*
@@ -264,7 +266,132 @@ fun ComparisonCandidateCard(
     }
 }
 
-// Tabs reutilizados (no cambiaron)
-@Composable fun ComparisonProjectsTab(candidate1: Candidato, candidate2: Candidato) { /* igual que antes */ }
-@Composable fun ComparisonDenunciasTab(candidate1: Candidato, candidate2: Candidato) { /* igual que antes */ }
-@Composable fun ComparisonResumenTab(candidate1: Candidato, candidate2: Candidato) { /* igual que antes */ }
+// Helper card for displaying info in tabs
+@Composable
+fun ComparisonInfoCard(title: String, content: @Composable () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(containerColor = SurfaceLight),
+        elevation = CardDefaults.cardElevation(1.dp)
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(text = title, fontWeight = FontWeight.Bold, color = Black, style = MaterialTheme.typography.bodyLarge)
+            Spacer(modifier = Modifier.height(8.dp))
+            content()
+        }
+    }
+}
+
+@Composable
+fun ComparisonProjectsTab(candidate1: Candidato, candidate2: Candidato) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(text = candidate1.nombre, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            if (candidate1.proyectos.isNotEmpty()) {
+                candidate1.proyectos.forEach {
+                    ComparisonInfoCard(title = it.nombre) {
+                        Text(it.descripcion, style = MaterialTheme.typography.bodySmall, color = MediumGray)
+                    }
+                }
+            } else {
+                Text("No tiene proyectos registrados.", style = MaterialTheme.typography.bodySmall, color = MediumGray)
+            }
+        }
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(text = candidate2.nombre, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            if (candidate2.proyectos.isNotEmpty()) {
+                candidate2.proyectos.forEach {
+                    ComparisonInfoCard(title = it.nombre) {
+                        Text(it.descripcion, style = MaterialTheme.typography.bodySmall, color = MediumGray)
+                    }
+                }
+            } else {
+                Text("No tiene proyectos registrados.", style = MaterialTheme.typography.bodySmall, color = MediumGray)
+            }
+        }
+    }
+}
+
+@Composable
+fun ComparisonDenunciasTab(candidate1: Candidato, candidate2: Candidato) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(text = candidate1.nombre, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            if (candidate1.denuncias.isNotEmpty()) {
+                candidate1.denuncias.forEach {
+                    ComparisonInfoCard(title = it.titulo) {
+                        Text(it.descripcion, style = MaterialTheme.typography.bodySmall, color = MediumGray)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text("Estado: ${it.estado}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
+                    }
+                }
+            } else {
+                Text("No tiene denuncias registradas.", style = MaterialTheme.typography.bodySmall, color = MediumGray)
+            }
+        }
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(text = candidate2.nombre, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            if (candidate2.denuncias.isNotEmpty()) {
+                candidate2.denuncias.forEach {
+                    ComparisonInfoCard(title = it.titulo) {
+                        Text(it.descripcion, style = MaterialTheme.typography.bodySmall, color = MediumGray)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text("Estado: ${it.estado}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
+                    }
+                }
+            } else {
+                Text("No tiene denuncias registradas.", style = MaterialTheme.typography.bodySmall, color = MediumGray)
+            }
+        }
+    }
+}
+
+@Composable
+fun ComparisonResumenTab(candidate1: Candidato, candidate2: Candidato) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = SurfaceLight),
+        elevation = CardDefaults.cardElevation(1.dp)
+    ) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Candidate 1 Summary
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = candidate1.nombre, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Spacer(modifier = Modifier.height(8.dp))
+                SummaryItem(label = "Investigaciones", value = if (candidate1.tieneInvestigaciones) "Sí" else "No")
+                SummaryItem(label = "Denuncias", value = if (candidate1.tieneDenuncias) "Sí" else "No")
+                SummaryItem(label = "N° Proyectos", value = candidate1.proyectos.size.toString())
+                SummaryItem(label = "N° Denuncias", value = candidate1.denuncias.size.toString())
+            }
+            // Candidate 2 Summary
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = candidate2.nombre, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Spacer(modifier = Modifier.height(8.dp))
+                SummaryItem(label = "Investigaciones", value = if (candidate2.tieneInvestigaciones) "Sí" else "No")
+                SummaryItem(label = "Denuncias", value = if (candidate2.tieneDenuncias) "Sí" else "No")
+                SummaryItem(label = "N° Proyectos", value = candidate2.proyectos.size.toString())
+                SummaryItem(label = "N° Denuncias", value = candidate2.denuncias.size.toString())
+            }
+        }
+    }
+}
+
+@Composable
+fun SummaryItem(label: String, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = label, style = MaterialTheme.typography.bodyMedium, color = MediumGray)
+        Text(text = value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, color = Black)
+    }
+    Spacer(modifier = Modifier.height(4.dp))
+}
