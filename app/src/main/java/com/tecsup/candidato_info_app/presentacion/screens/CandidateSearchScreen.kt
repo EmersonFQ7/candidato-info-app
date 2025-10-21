@@ -3,8 +3,6 @@ package com.tecsup.candidato_info_app.presentacion.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.tecsup.candidato_info_app.data.CandidateRepository
 import com.tecsup.candidato_info_app.navigation.AppScreen
 import com.tecsup.candidato_info_app.ui.theme.*
 
@@ -31,10 +30,21 @@ fun CandidateSearchScreen(navController: NavHostController) {
     var selectedPartido by remember { mutableStateOf("Todos los partidos") }
     var selectedRegion by remember { mutableStateOf("Todas las regiones") }
 
-    val mockCandidates = listOf(
-        Triple("María Elena Rodríguez Vargas", "Alianza para el Progreso", "Congresista"),
-        Triple("Carlos Alberto Mendoza Silva", "Fuerza Popular", "Alcalde Provincial")
-    )
+    // Filtrar candidatos según búsqueda y filtros
+    val filteredCandidates by remember(searchQuery, selectedCargo, selectedPartido, selectedRegion) {
+        derivedStateOf {
+            CandidateRepository.candidates.filter { candidate ->
+                val matchesQuery = candidate.name.contains(searchQuery, ignoreCase = true) ||
+                        candidate.party.contains(searchQuery, ignoreCase = true) ||
+                        candidate.location.contains(searchQuery, ignoreCase = true)
+                val matchesCargo = selectedCargo == "Todos los cargos" || candidate.position == selectedCargo
+                val matchesPartido = selectedPartido == "Todos los partidos" || candidate.party == selectedPartido
+                val matchesRegion = selectedRegion == "Todas las regiones" || candidate.location == selectedRegion
+
+                matchesQuery && matchesCargo && matchesPartido && matchesRegion
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -101,7 +111,7 @@ fun CandidateSearchScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Filters
+            // Filtros
             Text(
                 text = "Filtros",
                 style = MaterialTheme.typography.bodyLarge,
@@ -111,54 +121,53 @@ fun CandidateSearchScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Cargo Filter
             FilterDropdown(
                 label = "Cargo",
                 selectedValue = selectedCargo,
-                options = listOf("Todos los cargos", "Congresista", "Alcalde", "Gobernador"),
+                options = listOf("Todos los cargos", "Candidato al Congreso", "Candidato a la Presidencia", "Candidato a la Alcaldía"),
                 onSelectionChange = { selectedCargo = it }
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Partido Filter
             FilterDropdown(
                 label = "Partido",
                 selectedValue = selectedPartido,
-                options = listOf("Todos los partidos", "Alianza para el Progreso", "Fuerza Popular"),
+                options = listOf("Todos los partidos") + CandidateRepository.candidates.map { it.party }.distinct(),
                 onSelectionChange = { selectedPartido = it }
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Región Filter
             FilterDropdown(
                 label = "Región",
                 selectedValue = selectedRegion,
-                options = listOf("Todas las regiones", "Lima", "Arequipa", "Cusco"),
+                options = listOf("Todas las regiones") + CandidateRepository.candidates.map { it.location }.distinct(),
                 onSelectionChange = { selectedRegion = it }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Results
+            // Resultados
             Text(
-                text = "${mockCandidates.size} candidatos encontrados",
+                text = "${filteredCandidates.size} candidatos encontrados",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MediumGray
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Candidate List
-            mockCandidates.forEach { (name, party, position) ->
+            // Lista de candidatos
+            filteredCandidates.forEach { candidate ->
                 CandidateListItem(
-                    name = name,
-                    party = party,
-                    position = position,
-                    location = "Lima",
-                    onClick = { navController.navigate(AppScreen.CandidateDetail.createRoute("1")) }
-                )
+                    name = candidate.name,
+                    party = candidate.party,
+                    position = candidate.position,
+                    location = candidate.location
+                ) {
+                    // Navegar al perfil del candidato usando su ID
+                    navController.navigate(AppScreen.CandidateDetail.createRoute("2"))
+                }
                 Spacer(modifier = Modifier.height(12.dp))
             }
         }

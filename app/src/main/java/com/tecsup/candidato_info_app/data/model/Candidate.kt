@@ -8,6 +8,9 @@ data class Candidate(
     val location: String,
     val photoUrl: String,
     val biography: String,
+    //PA IMAGEN
+    val imagenRes: Int,
+
     val projects: List<Project> = emptyList(),
     val politicalHistory: List<PoliticalPosition> = emptyList(),
     val investigations: List<Investigation> = emptyList(),
