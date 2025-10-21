@@ -100,6 +100,7 @@ Se configuró Navigation Compose y se añadieron las dependencias de Gradle nece
 | `candidate_detail` | Muestra el perfil detallado. |
 | `comparison` | Pantalla para la comparación directa entre candidatos. |
 
+
 ## 🌳 Configuración de Git y Flujo Colaborativo (RF09)
 
 Se ha realizado el commit final del Día 2 en `main` y se han creado las ramas de features para que el equipo comience a trabajar en paralelo de cara al Día 3.
@@ -110,3 +111,25 @@ Se ha realizado el commit final del Día 2 en `main` y se han creado las ramas d
 | `feature/ui-design-sunmi` | 🎨 Sunmi (Diseñadora UI/UX) | Implementación de los componentes de Jetpack Compose y el diseño visual basado en Figma. |
 | `feature/data-model-david` | 📄 David (Documentador / Tester) | Definición y creación de las data classes necesarias en el paquete `model`. |
 | `feature/refactor-emerson` | 👨‍💻 Emerson (Líder Técnico) | Tareas de limpieza de código y gestión de dependencias/configuraciones avanzadas. |
+
+## 📁 Estructura del Repositorio
+---
+
+##  Avances en la Rama `david-home-screen`
+
+### 🧩 Implementaciones realizadas
+- Se creó la **pantalla de Inicio (HomeScreen)** según el diseño del Figma.
+- Se añadió una **barra de búsqueda** en la parte superior (aún sin funcionalidad completa).
+- Se implementaron **íconos circulares de funciones destacadas**:
+    - Comparar candidatos (comparar perfiles y propuestas lado a lado).
+    -  Noticias.
+    -  Fuentes oficiales.
+- Se configuró la navegación en `AppNavHost.kt` con rutas básicas hacia las vistas principales.
+- Se dejó preparado el espacio para la futura lista de candidatos.
+
+### 🚀 Próximos pasos
+- Implementar la pantalla **Búsqueda de Candidatos**.
+- Conectar la barra de búsqueda con la navegación.
+- Añadir navegación funcional a los íconos de “Funciones destacadas”.
+
+---
