@@ -25,7 +25,9 @@ class ComparisonViewModel : ViewModel() {
     val isLoading: StateFlow<Boolean> = _isLoading
 
     init {
-        loadCandidatos()
+        viewModelScope.launch {
+            _candidatos.value = repository.getAllCandidatos()
+        }
     }
 
     private fun loadCandidatos() {
