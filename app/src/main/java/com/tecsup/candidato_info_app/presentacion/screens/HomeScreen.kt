@@ -1,5 +1,6 @@
 package com.tecsup.candidato_info_app.presentacion.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,13 +15,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.tecsup.candidato_info_app.navigation.AppScreen
 import com.tecsup.candidato_info_app.ui.theme.*
-
+import com.tecsup.candidato_info_app.R
 @Composable
 fun HomeScreen(navController: NavHostController) {
     Column(
@@ -41,25 +44,13 @@ fun HomeScreen(navController: NavHostController) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = null,
-                    tint = White,
-                    modifier = Modifier.size(48.dp)
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = "Portal Ciudadano Electoral",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = White,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Información transparente sobre candidatos y autoridades",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = White.copy(alpha = 0.9f),
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                Image(
+                    painter = painterResource(id = R.drawable.logohorizontal),
+                    contentDescription = "Logo",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    contentScale = ContentScale.Fit
                 )
             }
         }
