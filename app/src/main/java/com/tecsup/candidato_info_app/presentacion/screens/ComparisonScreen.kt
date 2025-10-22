@@ -24,6 +24,7 @@ import com.tecsup.candidato_info_app.data.model.Denuncia
 import com.tecsup.candidato_info_app.data.model.Proyecto
 import com.tecsup.candidato_info_app.presentacion.viewmodel.ComparisonViewModel
 import com.tecsup.candidato_info_app.ui.theme.*
+import com.tecsup.candidato_info_app.presentacion.components.ComparisonCandidateCard
 
 @Composable
 fun ComparisonScreen(
@@ -116,6 +117,7 @@ fun ComparisonScreen(
                         party = candidate1!!.partido,
                         position = candidate1!!.cargo,
                         location = "${candidate1!!.ciudad}, ${candidate1!!.region}",
+                        imageUrl = candidate1!!.fotoUrl,
                         modifier = Modifier.weight(1f)
                     )
 
@@ -124,6 +126,7 @@ fun ComparisonScreen(
                         party = candidate2!!.partido,
                         position = candidate2!!.cargo,
                         location = "${candidate2!!.ciudad}, ${candidate2!!.region}",
+                        imageUrl = candidate2!!.fotoUrl,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -226,45 +229,6 @@ fun CandidateSelectorCard(
     }
 }
 
-@Composable
-fun ComparisonCandidateCard(
-    name: String,
-    party: String,
-    position: String,
-    location: String,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceLight),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(18.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(CircleShape)
-                    .background(Color(0xFFE5A76F)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("👤", fontSize = androidx.compose.ui.unit.TextUnit(28f, androidx.compose.ui.unit.TextUnitType.Sp))
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(name, fontWeight = FontWeight.Bold, color = Black)
-            Text(party, color = PrimaryBlue)
-            Text(position, color = MediumGray)
-            Text(location, color = MediumGray)
-        }
-    }
-}
 
 // Helper card for displaying info in tabs
 @Composable

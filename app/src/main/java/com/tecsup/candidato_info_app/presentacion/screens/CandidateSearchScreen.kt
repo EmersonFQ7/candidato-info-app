@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import com.tecsup.candidato_info_app.navigation.AppScreen
 import com.tecsup.candidato_info_app.presentacion.viewmodel.SearchViewModel
 import com.tecsup.candidato_info_app.ui.theme.*
+import com.tecsup.candidato_info_app.presentacion.components.CandidateCard
 
 @Composable
 fun CandidateSearchScreen(
@@ -165,11 +166,16 @@ fun CandidateSearchScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(candidatos) { candidate ->
-                    CandidateListItem(
+                    // 1. REEMPLAZO: CandidateListItem -> CandidateCard
+                    CandidateCard(
                         name = candidate.nombre,
                         party = candidate.partido,
                         position = candidate.cargo,
                         location = "${candidate.ciudad}, ${candidate.region}",
+
+                        // 2. AÑADIR PARAMETRO: Pasar la URL de la foto al componente
+                        imageUrl = candidate.fotoUrl,
+
                         onClick = { navController.navigate(AppScreen.CandidateDetail.createRoute(candidate.id)) }
                     )
                 }

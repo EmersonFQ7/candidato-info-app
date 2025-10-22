@@ -24,10 +24,13 @@ import com.tecsup.candidato_info_app.ui.theme.*
 import com.tecsup.candidato_info_app.data.model.Candidato
 import com.tecsup.candidato_info_app.data.model.HistorialPolitico
 import com.tecsup.candidato_info_app.data.model.Proyecto
-import androidx.compose.foundation.Image
-import androidx.compose.ui.res.painterResource
+
+// Imports requeridos para la carga de imágenes dinámicas
 import androidx.compose.ui.layout.ContentScale
-import com.tecsup.candidato_info_app.R
+import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.foundation.layout.Box
+import com.tecsup.candidato_info_app.ui.theme.LightGray
+import coil.compose.AsyncImage
 
 
 @Composable
@@ -43,9 +46,9 @@ fun CandidateDetailScreen(
         viewModel.getCandidatoById(candidateId)
     }
 
-
     val candidate by viewModel.candidato.collectAsState()
 
+    // Contenedor principal
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -79,14 +82,17 @@ fun CandidateDetailScreen(
             }
         }
 
+        // Columna de Contenido Desplazable
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
+            // Inicio del bloque de seguridad: cand solo existe aquí dentro
             candidate?.let { cand ->
-                // Candidate Card
+
+                // --- 1. CANDIDATE CARD (Implementación de AsyncImage) ---
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
@@ -99,16 +105,16 @@ fun CandidateDetailScreen(
                             .padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        // Avatar
-                        Image(
-                            painter = painterResource(id = R.drawable.rafael_lopez),
-                            contentDescription = "Foto de Rafael López Aliaga",
+                        // REEMPLAZO: Usar AsyncImage con URL del candidato
+                        AsyncImage(
+                            model = cand.fotoUrl,
+                            contentDescription = "Foto de ${cand.nombre}",
                             modifier = Modifier
                                 .size(100.dp)
                                 .clip(CircleShape),
-                            contentScale = ContentScale.Crop
-                        )
+                            contentScale = ContentScale.Crop,
 
+                        )
 
                         Spacer(modifier = Modifier.height(12.dp))
 
@@ -148,7 +154,7 @@ fun CandidateDetailScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Text("📍", fontSize = androidx.compose.ui.unit.TextUnit(16f, androidx.compose.ui.unit.TextUnitType.Sp))
+                            Text("📍", fontSize = 16.sp) // Usando .sp directo
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 text = "${cand.ciudad}, ${cand.region}",
@@ -157,11 +163,11 @@ fun CandidateDetailScreen(
                             )
                         }
                     }
-                }
+                } // Fin del Card de Perfil
 
+                // --- 2. STATUS ALERT ---
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Status Alert
                 val hasDenuncias = cand.denuncias.isNotEmpty()
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -179,7 +185,7 @@ fun CandidateDetailScreen(
                     ) {
                         Text(
                             if (hasDenuncias) "⚠" else "✓",
-                            fontSize = androidx.compose.ui.unit.TextUnit(20f, androidx.compose.ui.unit.TextUnitType.Sp),
+                            fontSize = 20.sp,
                             color = if (hasDenuncias) ErrorRed else SuccessGreen
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -191,9 +197,9 @@ fun CandidateDetailScreen(
                     }
                 }
 
+                // --- 3. TABS ---
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Tabs
                 TabRow(
                     selectedTabIndex = selectedTab,
                     modifier = Modifier.fillMaxWidth(),
@@ -226,11 +232,11 @@ fun CandidateDetailScreen(
                     2 -> FuentesTabContent()
                 }
 
+                // --- 4. COMPARE BUTTON ---
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Compare Button
                 Button(
-                    onClick = { },
+                    onClick = { /* Lógica de Navegación a Comparación */ },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
@@ -245,10 +251,17 @@ fun CandidateDetailScreen(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-            }
-        }
-    }
+
+            } // Fin de candidate?.let { cand -> ... }
+
+        } // Fin de Column principal (Scrollable)
+    } // Fin del Contenedor principal
 }
+
+
+// ----------------------------------------------------------------------------------
+// --- Funciones de Contenido de Pestañas ---
+// ----------------------------------------------------------------------------------
 
 @Composable
 fun ProjectsTabContent(proyectos: List<Proyecto>) {
@@ -272,7 +285,7 @@ fun ProjectsTabContent(proyectos: List<Proyecto>) {
                 Text("✓", fontSize = 18.sp, color = SuccessGreen)
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = proyecto.nombre, // Usa el nombre del proyecto
+                    text = proyecto.nombre,
                     style = MaterialTheme.typography.bodySmall,
                     color = DarkGray,
                     modifier = Modifier.weight(1f)
@@ -363,7 +376,7 @@ fun FuentesTabContent() {
                         .padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("📄", fontSize = androidx.compose.ui.unit.TextUnit(20f, androidx.compose.ui.unit.TextUnitType.Sp))
+                    Text("📄", fontSize = 20.sp)
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
                         text = source,
