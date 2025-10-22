@@ -165,6 +165,8 @@ fun ComparisonScreen(
                     2 -> ComparisonResumenTab(candidate1!!, candidate2!!)
                 }
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
