@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 // Primary Colors
 val PrimaryBlue = Color(0xFF0052CC)
-val PrimaryBlueDark = Color(0xFF003D99)
+val PrimaryBlueDark = Color(0xff013a8f)
 
 // Neutral Colors
 val White = Color(0xFFFFFFFF)

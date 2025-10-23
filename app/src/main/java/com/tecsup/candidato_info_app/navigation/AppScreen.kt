@@ -10,4 +10,7 @@ sealed class AppScreen(val route: String) {
     }
     object Comparison : AppScreen("comparison")
     object OfficialSources : AppScreen("official_sources")
+    object Ranking : AppScreen("ranking")
+    object News : AppScreen("news")
+    object ImportantData : AppScreen("important_data")
 }

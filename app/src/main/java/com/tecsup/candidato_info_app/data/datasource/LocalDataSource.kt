@@ -298,4 +298,98 @@ object LocalDataSource {
     fun getPartidos(): List<String> = candidatos.map { it.partido }.distinct()
 
     fun getRegiones(): List<String> = candidatos.map { it.region }.distinct()
+
+
+    fun getNoticias(): List<Noticia> = listOf(
+        Noticia(
+            id = "noticia_1",
+            titulo = "Tech Giants Report Strong Q4 Earnings Despite Market Volatility",
+            descripcion = "Major technology companies exceeded expectations in their quarterly reports, showing resilience in...",
+            contenido = "Major technology companies exceeded expectations in their quarterly reports, showing resilience in the face of market volatility. The sector continues to demonstrate strong growth potential.",
+            fecha = "2024-01-15",
+            imagen = "noticia_1",
+            fuente = "Reuters"
+        ),
+        Noticia(
+            id = "noticia_2",
+            titulo = "Nuevas regulaciones electorales para 2026",
+            descripcion = "El JNE anuncia cambios importantes en los procesos electorales...",
+            contenido = "El Jurado Nacional de Elecciones ha anunciado nuevas regulaciones que entrarán en vigor para las elecciones de 2026.",
+            fecha = "2024-01-14",
+            imagen = "noticia_2",
+            fuente = "JNE"
+        ),
+        Noticia(
+            id = "noticia_3",
+            titulo = "Candidatos presidenciales presentan propuestas de desarrollo",
+            descripcion = "Los principales candidatos presentaron sus planes de gobierno...",
+            contenido = "Los principales candidatos a la presidencia presentaron sus planes de gobierno enfocados en desarrollo económico y social.",
+            fecha = "2024-01-13",
+            imagen = "noticia_3",
+            fuente = "Congreso"
+        )
+    )
+
+    // <CHANGE> Agregar datos simulados de datos importantes
+    fun getDatosImportantes(): List<DatoImportante> = listOf(
+        DatoImportante(
+            id = "dato_1",
+            titulo = "¿Qué se elige?",
+            descripcion = "Información sobre qué se elige en las elecciones 2026",
+            contenido = "En las elecciones generales de Perú 2026 se elige:\n" +
+                    "• 1 Presidente de la República\n" +
+                    "• 2 Vicepresidentes\n" +
+                    "• 130 Diputados\n" +
+                    "• 60 Senadores\n" +
+                    "• 5 Parlamentarios Andinos",
+            icono = "dato_que_se_elige"
+        ),
+        DatoImportante(
+            id = "dato_2",
+            titulo = "Fecha y Hora",
+            descripcion = "Cuándo se realizarán las elecciones",
+            contenido = "Fecha: 12 de abril de 2026\n" +
+                    "Hora: 7:00 a 17:00\n" +
+                    "Lugar: Locales de votación en todo el país",
+            icono = "dato_fecha"
+        ),
+        DatoImportante(
+            id = "dato_3",
+            titulo = "¿Quiénes votan?",
+            descripcion = "Requisitos para ser elector",
+            contenido = "Pueden votar todos los ciudadanos peruanos mayores de 18 años, con DNI vigente.\n" +
+                    "El voto es obligatorio hasta los 70 años.\n" +
+                    "A partir de los 70 años, el voto es facultativo (opcional).",
+            icono = "dato_quienes_votan"
+        ),
+        DatoImportante(
+            id = "dato_4",
+            titulo = "Recomendaciones",
+            descripcion = "Consejos para el día de votación",
+            contenido = "• Llevar DNI vigente\n" +
+                    "• Revisar tu local y mesa de votación antes del día\n" +
+                    "• Evita compartir tu voto o fotografiar la cédula electoral\n" +
+                    "• Llega temprano para evitar aglomeraciones",
+            icono = "dato_recomendaciones"
+        )
+    )
+
+    // <CHANGE> Sistema de votos simulado
+    private val votos = mutableMapOf<String, Int>()
+
+    fun registrarVoto(candidatoId: String) {
+        votos[candidatoId] = (votos[candidatoId] ?: 0) + 1
+    }
+
+    fun obtenerVotosPorCandidato(candidatoId: String): Int {
+        return votos[candidatoId] ?: 0
+    }
+
+    fun obtenerRankingPorCargo(cargo: String): List<Pair<Candidato, Int>> {
+        return getAllCandidatos()
+            .filter { it.cargo == cargo }
+            .map { it to (votos[it.id] ?: 0) }
+            .sortedByDescending { it.second }
+            .take(5)
+    }
 }

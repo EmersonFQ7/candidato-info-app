@@ -8,7 +8,6 @@ import androidx.activity.ComponentActivity // Para extender ComponentActivity
 import androidx.activity.compose.setContent // Para usar el setContent
 import androidx.navigation.compose.rememberNavController // ¡MUY IMPORTANTE para rememberNavController!
 
-// La importación de tu NavHost y Tema
 import com.tecsup.candidato_info_app.navigation.AppNavHost
 import com.tecsup.candidato_info_app.ui.theme.CandidatoInfoTheme
 class MainActivity : ComponentActivity() {
