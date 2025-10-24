@@ -980,43 +980,34 @@ private val proyectos6 = listOf(
         DatoImportante(
             id = "dato_1",
             titulo = "¿Qué se elige?",
-            descripcion = "Información sobre qué se elige en las elecciones 2026",
-            contenido = "En las elecciones generales de Perú 2026 se elige:\n" +
+             contenido = "En las elecciones generales de Perú 2026 se elige:\n" +
                     "• 1 Presidente de la República\n" +
                     "• 2 Vicepresidentes\n" +
                     "• 130 Diputados\n" +
                     "• 60 Senadores\n" +
                     "• 5 Parlamentarios Andinos",
-            icono = "dato_que_se_elige"
-        ),
+         ),
         DatoImportante(
             id = "dato_2",
             titulo = "Fecha y Hora",
-            descripcion = "Cuándo se realizarán las elecciones",
-            contenido = "Fecha: 12 de abril de 2026\n" +
-                    "Hora: 7:00 a 17:00\n" +
-                    "Lugar: Locales de votación en todo el país",
-            icono = "dato_fecha"
-        ),
+             contenido = "Fecha: 12 de abril de 2026\n" +
+                    "Hora: 7:00 a 17:00\n",
+         ),
         DatoImportante(
             id = "dato_3",
             titulo = "¿Quiénes votan?",
-            descripcion = "Requisitos para ser elector",
-            contenido = "Pueden votar todos los ciudadanos peruanos mayores de 18 años, con DNI vigente.\n" +
+             contenido = "Pueden votar todos los ciudadanos peruanos mayores de 18 años, con DNI vigente.\n" +
                     "El voto es obligatorio hasta los 70 años.\n" +
                     "A partir de los 70 años, el voto es facultativo (opcional).",
-            icono = "dato_quienes_votan"
-        ),
+         ),
         DatoImportante(
             id = "dato_4",
             titulo = "Recomendaciones",
-            descripcion = "Consejos para el día de votación",
-            contenido = "• Llevar DNI vigente\n" +
+             contenido = "• Llevar DNI vigente\n" +
                     "• Revisar tu local y mesa de votación antes del día\n" +
                     "• Evita compartir tu voto o fotografiar la cédula electoral\n" +
                     "• Llega temprano para evitar aglomeraciones",
-            icono = "dato_recomendaciones"
-        )
+         )
     )
 
     // <CHANGE> Sistema de votos simulado

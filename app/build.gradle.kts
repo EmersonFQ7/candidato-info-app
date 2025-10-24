@@ -50,7 +50,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation("androidx.compose.material:material-icons-extended")
-
+    implementation("com.google.accompanist:accompanist-flowlayout:0.30.1")
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.foundation)
     implementation(libs.foundation)
