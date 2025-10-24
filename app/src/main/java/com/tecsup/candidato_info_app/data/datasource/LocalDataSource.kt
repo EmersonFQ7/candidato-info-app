@@ -772,6 +772,184 @@ private val proyectos6 = listOf(
         )
     )
 
+    // INFORMACIÓN SOBRE EL CANDIDATO ROBERTO CHIABRA
+    private val proyectos11 = listOf(
+        Proyecto(
+            id = "p31",
+            nombre = "Fortalecimiento de la Defensa Nacional",
+            descripcion = "Plan de modernización y profesionalización de las Fuerzas Armadas del Perú",
+            estado = "Plan",
+            fechaInicio = "2025",
+            fechaFin = null
+        ),
+        Proyecto(
+            id = "p32",
+            nombre = "Programa de Seguridad Ciudadana Regional",
+            descripcion = "Iniciativa para reducir la criminalidad y fortalecer la presencia del Estado en provincias",
+            estado = "Plan",
+            fechaInicio = "2025",
+            fechaFin = null
+        )
+    )
+
+    private val historialPolitico11 = listOf(
+        HistorialPolitico(
+            id = "h30",
+            cargo = "Comandante General del Ejército",
+            institucion = "Fuerzas Armadas del Perú",
+            fechaInicio = "1998",
+            fechaFin = "2003",
+            descripcion = "Dirigió el Ejército durante la gestión del exasesor presidencial Vladimiro Montesinos, con cuestionamientos por irregularidades administrativas"
+        ),
+        HistorialPolitico(
+            id = "h31",
+            cargo = "Candidato presidencial",
+            institucion = "Coalición PPC – Unidad y Paz",
+            fechaInicio = "2025",
+            fechaFin = null,
+            descripcion = "Candidatura presidencial con foco en seguridad y defensa nacional"
+        )
+    )
+
+    private val denuncias11 = listOf(
+        Denuncia(
+            id = "d12",
+            tipo = "Denuncia",
+            titulo = "Investigación por irregularidades en el Ejército y vínculo con Montesinos",
+            descripcion = "Investigación por presuntas irregularidades durante su gestión en el Ejército y cercanía al condenado exasesor presidencial Vladimiro Montesinos",
+            fecha = "2025-08-20",
+            estado = "En proceso",
+            institucion = "Fiscalía de la Nación"
+        )
+    )
+
+    // INFORMACIÓN SOBRE EL CANDIDATO MARIANO GONZÁLEZ
+    private val proyectos12 = listOf(
+        Proyecto(
+            id = "p33",
+            nombre = "Reforma de Salud y Atención Primaria",
+            descripcion = "Fortalecer la atención primaria y regular el sector salud privado",
+            estado = "Plan",
+            fechaInicio = "2025",
+            fechaFin = null
+        ),
+        Proyecto(
+            id = "p34",
+            nombre = "Reforma de la Relación Ejecutivo-MEF",
+            descripcion = "Mejorar coordinación y eficiencia entre el Ejecutivo y el MEF",
+            estado = "Plan",
+            fechaInicio = "2025",
+            fechaFin = null
+        )
+    )
+
+    private val historialPolitico12 = listOf(
+        HistorialPolitico(
+            id = "h32",
+            cargo = "Presidente de Salvemos al Perú",
+            institucion = "Salvemos al Perú",
+            fechaInicio = "2025",
+            fechaFin = null,
+            descripcion = "Lidera el partido con enfoque en reformas administrativas y sector salud"
+        ),
+        HistorialPolitico(
+            id = "h33",
+            cargo = "Exconsultor de Odebrecht",
+            institucion = "Odebrecht",
+            fechaInicio = "2010",
+            fechaFin = "2015",
+            descripcion = "Experiencia en consultoría internacional y obras públicas"
+        )
+    )
+
+    private val denuncias12 = listOf(
+        Denuncia(
+            id = "d13",
+            tipo = "Denuncia",
+            titulo = "Acusación por uso de firmas falsas ante el JNE",
+            descripcion = "Fue acusado por el partido Salvemos al Perú de utilizar firmas presuntamente falsas para inscribir una alianza ante el Jurado Nacional de Elecciones",
+            fecha = "2025-08-31",
+            estado = "En proceso",
+            institucion = "Ministerio Público"
+        )
+    )
+
+    // INFORMACIÓN SOBRE EL CANDIDATO CARLOS ESPÁ
+    private val proyectos13 = listOf(
+        Proyecto(
+            id = "p35",
+            nombre = "Reforma Tributaria y Simplificación Administrativa",
+            descripcion = "Propuesta de simplificación de trámites y ajuste de impuestos",
+            estado = "Plan",
+            fechaInicio = "2025",
+            fechaFin = null
+        ),
+        Proyecto(
+            id = "p36",
+            nombre = "Privatización de Videovigilancia Penitenciaria",
+            descripcion = "Modernización del sistema penitenciario mediante participación privada",
+            estado = "Plan",
+            fechaInicio = "2025",
+            fechaFin = null
+        )
+    )
+
+    private val historialPolitico13 = listOf(
+        HistorialPolitico(
+            id = "h34",
+            cargo = "Candidato presidencial",
+            institucion = "SíCreo",
+            fechaInicio = "2025",
+            fechaFin = null,
+            descripcion = "Candidato presidencial centrado en reformas tributarias y administración pública"
+        )
+    )
+
+    private val denuncias13 = listOf<Denuncia>() // No se encontraron denuncias registradas
+
+    // INFORMACIÓN SOBRE EL CANDIDATO GEORGE FORSYTH
+    private val proyectos14 = listOf(
+        Proyecto(
+            id = "p37",
+            nombre = "Mejoras en Gestión Municipal y Seguridad",
+            descripcion = "Iniciativa basada en su experiencia como alcalde, fortaleciendo seguridad y administración local",
+            estado = "Plan",
+            fechaInicio = "2025",
+            fechaFin = null
+        )
+    )
+
+    private val historialPolitico14 = listOf(
+        HistorialPolitico(
+            id = "h35",
+            cargo = "Alcalde de La Victoria",
+            institucion = "Municipalidad de La Victoria",
+            fechaInicio = "2019",
+            fechaFin = "2022",
+            descripcion = "Gestión municipal enfocada en seguridad y proyectos sociales"
+        ),
+        HistorialPolitico(
+            id = "h36",
+            cargo = "Candidato presidencial",
+            institucion = "Somos Perú",
+            fechaInicio = "2025",
+            fechaFin = null,
+            descripcion = "Candidato presidencial con enfoque en gestión pública y seguridad"
+        )
+    )
+
+    private val denuncias14 = listOf(
+        Denuncia(
+            id = "d14",
+            tipo = "Denuncia",
+            titulo = "Denuncia por violencia doméstica",
+            descripcion = "Su exesposa Vanessa Terkes presentó una denuncia por violencia psicológica durante su matrimonio; la denuncia fue archivada en primera instancia",
+            fecha = "2019-05-31",
+            estado = "Archivada",
+            institucion = "Poder Judicial"
+        )
+    )
+
 
 
     private val candidatos = listOf(
@@ -902,6 +1080,70 @@ private val proyectos6 = listOf(
             proyectos = proyectos10,
             historialPolitico = historialPolitico10,
             denuncias = denuncias10,
+            fuentesOficiales = emptyList(),
+            tieneInvestigaciones = true,
+            tieneDenuncias = true
+        ),
+        Candidato(
+            id = "c11",
+            nombre = "Roberto Chiabra Gutiérrez",
+            cargo = "Presidente",
+            partido = "PPC – Unidad y Paz",
+            region = "Nacional",
+            ciudad = "Lima",
+            fotoUrl = "https://img.lpderecho.pe/wp-content/uploads/2024/04/Roberto-Chiabra-LPDerecho.jpg",
+            descripcion = "Congresista y excomandante general del Ejército, enfocado en defensa y seguridad nacional",
+            proyectos = proyectos11,
+            historialPolitico = historialPolitico11,
+            denuncias = denuncias11,
+            fuentesOficiales = emptyList(),
+            tieneInvestigaciones = true,
+            tieneDenuncias = true
+        ),
+        Candidato(
+            id = "c12",
+            nombre = "Mariano González Fernández",
+            cargo = "Presidente",
+            partido = "Salvemos al Perú",
+            region = "Nacional",
+            ciudad = "Lima",
+            fotoUrl = "https://nuevodiario-assets.s3.us-east-2.amazonaws.com/wp-content/uploads/2022/07/04192725/92720965_01010mariano.jpg",
+            descripcion = "Presidente de Salvemos al Perú, enfocado en reformas de salud y administración pública",
+            proyectos = proyectos12,
+            historialPolitico = historialPolitico12,
+            denuncias = denuncias12,
+            fuentesOficiales = emptyList(),
+            tieneInvestigaciones = true,
+            tieneDenuncias = true
+        ),
+        Candidato(
+            id = "c13",
+            nombre = "Alfonso Carlos Espá Garcés-Alvear",
+            cargo = "Presidente",
+            partido = "SíCreo",
+            region = "Nacional",
+            ciudad = "Lima",
+            fotoUrl = "https://peru21.pe/sites/default/efsfiles/2025-03/entrevista-espa1.jpg_web.jpg",
+            descripcion = "Aspirante de SíCreo, enfocado en reforma tributaria y simplificación administrativa",
+            proyectos = proyectos13,
+            historialPolitico = historialPolitico13,
+            denuncias = denuncias13,
+            fuentesOficiales = emptyList(),
+            tieneInvestigaciones = false,
+            tieneDenuncias = false
+        ),
+        Candidato(
+            id = "c14",
+            nombre = "George Forsyth Sommer",
+            cargo = "Presidente",
+            partido = "Somos Perú",
+            region = "Nacional",
+            ciudad = "Lima",
+            fotoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/George_Forsyth_Sommer.jpg/250px-George_Forsyth_Sommer.jpg",
+            descripcion = "Exalcalde de La Victoria, enfocado en gestión pública y seguridad",
+            proyectos = proyectos14,
+            historialPolitico = historialPolitico14,
+            denuncias = denuncias14,
             fuentesOficiales = emptyList(),
             tieneInvestigaciones = true,
             tieneDenuncias = true
