@@ -167,7 +167,7 @@ object LocalDataSource {
             titulo = "Denuncia por nepotismo",
             descripcion = "Presunta contratación de familiares",
             fecha = "2017",
-            estado = "Archivada por falta de pruebas",
+            estado = "cancelado",
             institucion = "Fiscalía Provincial"
         ),
         Denuncia(
@@ -268,7 +268,7 @@ private val proyectos3 = listOf(
             titulo = "Denuncia por nepotismo",
             descripcion = "La Contraloría recomendó denuncia penal por presunto nepotismo al contratar a su sobrino en el Ministerio de la Producción.",
             fecha = "2022-12-27",
-            estado = "En investigación",
+            estado = "resuelto",
             institucion = "Contraloría / Fiscalía de la Nación"
         ),
         Denuncia(
