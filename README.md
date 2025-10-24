@@ -51,7 +51,12 @@ Desarrollar una aplicación móvil que permita a los ciudadanos acceder a inform
 ---
 
 ## 🎨 Prototipo en Figma  
-🔗 [Ver prototipo en Figma](https://www.figma.com/) *(agrega aquí tu enlace real)*  
+<!-- 🧩 Primer diseño -->
+[🎨 Ver primer diseño en Figma](https://www.figma.com/make/C0julpMVtw3s3yjY2ijKE3/Pantallas-de-Candidatos?node-id=0-1&p=f&t=HyVoKzs0t08fjIJc-0&fullscreen=1)
+
+<!-- 🧪 Segundo diseño -->
+[🚀 Ver segundo diseño en Figma](https://www.figma.com/design/K1EjueCz6jtLO8emF0Gim8/ProyectoLAB_Grupal?node-id=0-1&t=IwwdivRk3ZXAnIw4-1)
+
 
 Incluye las siguientes pantallas:
 - Pantalla de Inicio  
