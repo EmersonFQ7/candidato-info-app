@@ -1,5 +1,14 @@
 # 🇵🇪 Portal Ciudadano Electoral – Transparencia Electoral Ciudadana
 
+## 👥 Integrantes del Equipo
+
+ **Emerson Flores Quispe**  
+ **Sunmi Casaño Suarez**  
+ **David Chumbile Tinco**
+
+ 
+## 🧩 Descripción General del Proyecto
+
 Aplicación móvil desarrollada en **Kotlin** con **Jetpack Compose** que busca promover la **transparencia electoral** en el Perú.  
 Permite a los ciudadanos consultar información pública sobre **candidatos al Congreso y la Presidencia**, incluyendo historial político, denuncias, proyectos presentados y enlaces a fuentes oficiales como **JNE, ONPE** y el **Congreso de la República**.
 
@@ -112,8 +121,7 @@ Se ha realizado el commit final del Día 2 en `main` y se han creado las ramas d
 | `feature/data-model-david` | 📄 David (Documentador / Tester) | Definición y creación de las data classes necesarias en el paquete `model`. |
 | `feature/refactor-emerson` | 👨‍💻 Emerson (Líder Técnico) | Tareas de limpieza de código y gestión de dependencias/configuraciones avanzadas. |
 
-## 📁 Estructura del Repositorio
----
+## 🖌️ DÍA 3 – Interfaz de Usuario (UI)  
 
 ##  Avances en la Rama `david-home-screen`
 
@@ -132,4 +140,90 @@ Se ha realizado el commit final del Día 2 en `main` y se han creado las ramas d
 - Conectar la barra de búsqueda con la navegación.
 - Añadir navegación funcional a los íconos de “Funciones destacadas”.
 
+
+Durante este día se trasladó el diseño del prototipo en Figma al entorno de desarrollo, implementando las pantallas principales con **Material Design 3**.  
+Se creó la **pantalla de inicio**, la **lista de candidatos** y la **vista de detalle**, asegurando coherencia visual y navegación fluida.  
+
+✅ **Requerimientos completados:**
+- RF11: Pantalla de inicio con barra de búsqueda.  
+- RF12: Lista de candidatos (nombre, partido, foto, cargo).  
+- RF13: Detalle del candidato con información estructurada.  
+- RF14: Aplicación de Material 3.  
+- RF15: Navegación lista → detalle.  
+
 ---
+
+## 🧩 DÍA 4 – Lógica y Manejo de Datos
+
+Se implementó la lógica de datos bajo el patrón **MVVM**, incorporando modelos como `Candidato`, `Proyecto` y `Denuncia`.  
+Los datos se cargan desde una **fuente local (JSON/lista simulada)**, mostrando en pantalla información de proyectos y denuncias vinculadas a cada candidato.  
+
+✅ **Requerimientos completados:**
+- RF16: Creación de modelos de datos.  
+- RF17: Fuente local de datos simulados.  
+- RF18: Mostrar proyectos y denuncias en detalle.  
+- RF19: Enlaces a fuentes oficiales.  
+- RF20: Lógica dentro del ViewModel.  
+
+---
+
+## ⚙️ DÍA 5 – Funcionalidades Complementarias e Integración
+
+En esta etapa se añadieron las funcionalidades avanzadas: **búsqueda por nombre, partido o región**, y la **comparación de candidatos**.  
+También se implementaron **indicadores visuales de denuncias y proyectos activos**, así como manejo de errores y pruebas de integración.  
+
+✅ **Requerimientos completados:**
+- RF21: Búsqueda avanzada.  
+- RF22: Comparador de candidatos.  
+- RF23: Indicadores visuales.  
+- RF24: Manejo de errores (sin conexión o datos vacíos).  
+- RF25: Pruebas e integración final.  
+
+---
+
+## 📘 DÍA 6 – Documentación y Presentación Final
+
+Se completó la documentación del proyecto, el archivo **README.md**, las pruebas finales en emulador y la **etiqueta de versión v1.0** en GitHub.  
+Se preparó la presentación final del producto sin errores de compilación.  
+
+✅ **Requerimientos completados:**
+- RF26: README completo con descripción, integrantes y fuentes.  
+- RF27: Ejecución validada en emulador/dispositivo.  
+- RF28: Versión v1.0 en GitHub.  
+- RF29: Presentación lista.  
+- RF30: App funcional y sin errores.  
+
+---
+
+## 🧾 Fuentes de Datos Oficiales
+- [Jurado Nacional de Elecciones (JNE)](https://www.jne.gob.pe)  
+- [Oficina Nacional de Procesos Electorales (ONPE)](https://www.onpe.gob.pe)  
+- [Congreso de la República del Perú](https://www.congreso.gob.pe)  
+- [Poder Judicial del Perú](https://www.pj.gob.pe)
+
+## 🖼️ Galería de Funcionalidades
+
+*(Imágenes ilustrativas del prototipo y la app en ejecución)*  
+
+---
+
+### 🏠 Pantalla de Inicio
+![Pantalla de Inicio](./images/app_home.png)
+
+---
+
+### 🔎 Búsqueda de Candidatos
+![Búsqueda de Candidatos](./images/app_search.png)
+
+---
+
+### 👤 Detalle del Candidato
+![Detalle del Candidato](./images/app_detail.png)
+
+---
+
+### ⚖️ Comparación de Candidatos
+![Comparación de Candidatos](./images/app_comparison.png)
+
+---
+
