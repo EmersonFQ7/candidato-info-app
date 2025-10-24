@@ -30,14 +30,17 @@ import androidx.compose.ui.unit.sp
 import com.tecsup.candidato_info_app.data.model.HistorialPolitico
 import com.tecsup.candidato_info_app.data.model.Proyecto
 import com.tecsup.candidato_info_app.presentacion.viewmodel.CandidateViewModel
+import com.tecsup.candidato_info_app.presentacion.viewmodel.SharedViewModelProvider
 import com.tecsup.candidato_info_app.ui.theme.*
 import com.tecsup.candidato_info_app.R
+import com.tecsup.candidato_info_app.presentacion.viewmodel.VotingViewModel
 
 @Composable
 fun CandidateDetailScreen(
     navController: NavHostController,
     candidateId: String,
-    viewModel: CandidateViewModel = viewModel()
+    viewModel: CandidateViewModel = viewModel(),
+    votingViewModel: VotingViewModel = SharedViewModelProvider.getVotingViewModel()
 ) {
     var selectedTab by remember { mutableStateOf(0) }
     var showVotingModal by remember { mutableStateOf(false) }
@@ -284,8 +287,19 @@ fun CandidateDetailScreen(
 
     if (showVotingModal) {
         VotingModal(
-            onDismiss = { showVotingModal = false },
-            onConfirm = { showVotingModal = false },
+            onDismiss = { 
+                showVotingModal = false
+                votingStep = 0
+            },
+            onConfirm = { 
+                candidate?.let { cand ->
+                    votingViewModel.registrarVoto(cand.id)
+                    // Mostrar feedback visual
+                    votingStep = 2 // Nuevo paso para mostrar confirmación
+                }
+                showVotingModal = false
+                votingStep = 0
+            },
             votingStep = votingStep,
             onStepChange = { votingStep = it }
         )
@@ -306,26 +320,42 @@ fun VotingModal(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = if (votingStep == 0) "¿Votarías por este candidato?" else "Confirmación",
+                text = when (votingStep) {
+                    0 -> "¿Votarías por este candidato?"
+                    1 -> "Confirmación"
+                    else -> "¡Voto Registrado!"
+                },
                 fontWeight = FontWeight.Bold
             )
         },
         text = {
             Text(
-                text = if (votingStep == 0)
-                    "Tu voto solo será válido dentro de esta aplicación con fines informativos."
-                else
-                    "Tu voto ha sido registrado exitosamente."
+                text = when (votingStep) {
+                    0 -> "Tu voto solo será válido dentro de esta aplicación con fines informativos."
+                    1 -> "¿Estás seguro de votar por este candidato?"
+                    else -> "¡Tu voto ha sido registrado exitosamente! El ranking se actualizará automáticamente."
+                }
             )
         },
         confirmButton = {
             Button(
                 onClick = {
-                    if (votingStep == 0) onStepChange(1) else onConfirm()
+                    when (votingStep) {
+                        0 -> onStepChange(1)
+                        1 -> onConfirm()
+                        else -> onConfirm()
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue)
             ) {
-                Text(if (votingStep == 0) "Sí" else "Aceptar", color = White)
+                Text(
+                    when (votingStep) {
+                        0 -> "Sí"
+                        1 -> "Confirmar Voto"
+                        else -> "Cerrar"
+                    }, 
+                    color = White
+                )
             }
         },
         dismissButton = {

@@ -6,7 +6,6 @@ import com.tecsup.candidato_info_app.data.model.Noticia
 import com.tecsup.candidato_info_app.data.repository.CandidateRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
 class NewsViewModel : ViewModel() {
 

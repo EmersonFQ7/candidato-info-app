@@ -22,10 +22,11 @@ class CandidateRepository {
     fun getPartidos(): List<String> = LocalDataSource.getPartidos()
 
     fun getRegiones(): List<String> = LocalDataSource.getRegiones()
+
     fun getNoticias(): List<Noticia> = LocalDataSource.getNoticias()
 
     fun registrarVoto(candidatoId: String) {
-         LocalDataSource.registrarVoto(candidatoId)
+        LocalDataSource.registrarVoto(candidatoId)
     }
 
     fun obtenerVotosPorCandidato(candidatoId: String): Int {

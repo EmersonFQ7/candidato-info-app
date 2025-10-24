@@ -1,11 +1,13 @@
 package com.tecsup.candidato_info_app.data.datasource
 
-
 import com.tecsup.candidato_info_app.data.model.*
 import com.tecsup.candidato_info_app.R
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 object LocalDataSource {
-
+    // Estado observable para cambios de ranking
+    val rankingUpdated: StateFlow<Unit> = VotePersistence.rankingUpdated
     private val proyectos1 = listOf(
         Proyecto(
             id = "p1",
@@ -1010,22 +1012,22 @@ private val proyectos6 = listOf(
          )
     )
 
-    // <CHANGE> Sistema de votos simulado
-    private val votos = mutableMapOf<String, Int>()
-
+    // <CHANGE> Sistema de votos con persistencia
     fun registrarVoto(candidatoId: String) {
-        votos[candidatoId] = (votos[candidatoId] ?: 0) + 1
+        VotePersistence.registrarVoto(candidatoId)
     }
 
     fun obtenerVotosPorCandidato(candidatoId: String): Int {
-        return votos[candidatoId] ?: 0
+        return VotePersistence.obtenerVotosPorCandidato(candidatoId)
     }
 
     fun obtenerRankingPorCargo(cargo: String): List<Pair<Candidato, Int>> {
+        val votos = VotePersistence.obtenerVotos()
         return getAllCandidatos()
             .filter { it.cargo == cargo }
             .map { it to (votos[it.id] ?: 0) }
             .sortedByDescending { it.second }
             .take(5)
     }
+
 }

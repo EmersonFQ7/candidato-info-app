@@ -2,10 +2,12 @@ package com.tecsup.candidato_info_app.presentacion.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tecsup.candidato_info_app.data.datasource.LocalDataSource
 import com.tecsup.candidato_info_app.data.model.Candidato
 import com.tecsup.candidato_info_app.data.repository.CandidateRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class RankingViewModel(private val repository: CandidateRepository) : ViewModel() {
@@ -13,7 +15,7 @@ class RankingViewModel(private val repository: CandidateRepository) : ViewModel(
     private val _cargos = MutableStateFlow<List<String>>(emptyList())
     val cargos: StateFlow<List<String>> = _cargos
 
-    private val _selectedCargo = MutableStateFlow("Presidente de la República")
+    private val _selectedCargo = MutableStateFlow("Presidente")
     val selectedCargo: StateFlow<String> = _selectedCargo
 
     private val _ranking = MutableStateFlow<List<Pair<Candidato, Int>>>(emptyList())
@@ -22,16 +24,19 @@ class RankingViewModel(private val repository: CandidateRepository) : ViewModel(
     init {
         loadCargos()
         loadRanking()
+        
+        // Escuchar cambios en el ranking automáticamente con debounce
+        viewModelScope.launch {
+            LocalDataSource.rankingUpdated.collect {
+                // Actualizar inmediatamente cuando hay cambios
+                loadRanking()
+            }
+        }
     }
 
     private fun loadCargos() {
         viewModelScope.launch {
-            _cargos.value = listOf(
-                "Presidente de la República",
-                "Congresista",
-                "Alcalde",
-                "Gobernador"
-            )
+            _cargos.value = repository.getCargos()
         }
     }
 

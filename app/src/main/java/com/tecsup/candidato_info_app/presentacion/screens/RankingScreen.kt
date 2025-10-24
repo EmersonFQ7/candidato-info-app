@@ -1,9 +1,11 @@
 package com.tecsup.candidato_info_app.presentacion.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -14,19 +16,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.tecsup.candidato_info_app.data.model.Candidato
 import com.tecsup.candidato_info_app.presentacion.viewmodel.RankingViewModel
-import com.tecsup.candidato_info_app.ui.theme.PrimaryBlue
+import com.tecsup.candidato_info_app.presentacion.viewmodel.SharedViewModelProvider
+import com.tecsup.candidato_info_app.ui.theme.*
 
 @Composable
 fun RankingScreen(
     navController: NavHostController,
-    viewModel: RankingViewModel = viewModel()
+    viewModel: RankingViewModel = SharedViewModelProvider.getRankingViewModel()
 ) {
     val cargos = viewModel.cargos.collectAsState()
     val selectedCargo = viewModel.selectedCargo.collectAsState()
@@ -35,7 +40,7 @@ fun RankingScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(BackgroundLight)
     ) {
         // Header
         Box(
@@ -66,65 +71,61 @@ fun RankingScreen(
             }
         }
 
-        // Cargo Selector
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                "Selecciona un cargo:",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-            OutlinedButton(
-                onClick = { /* Show dropdown */ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                shape = RoundedCornerShape(8.dp),
-                border = ButtonDefaults.outlinedButtonBorder
-            ) {
-                Text(selectedCargo.value, color = Color.Black)
-            }
-        }
-
-        // Ranking List
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(bottom = 16.dp)
+                .padding(16.dp)
         ) {
-            itemsIndexed(ranking.value) { index, (candidato, votos) ->
-                RankingItemCard(
-                    position = index + 1,
-                    candidato = candidato,
-                    votos = votos
-                )
+            // Título del ranking
+            Text(
+                text = "TOP 5 CANDIDATOS",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                color = White,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            // Ranking List
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(bottom = 16.dp)
+            ) {
+                itemsIndexed(ranking.value) { index, (candidato, votos) ->
+                    RankingCandidateCard(
+                        position = index + 1,
+                        candidato = candidato,
+                        votos = votos,
+                        onClick = { 
+                            navController.navigate("candidate_detail/${candidato.id}")
+                        }
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun RankingItemCard(
+fun RankingCandidateCard(
     position: Int,
     candidato: Candidato,
-    votos: Int
+    votos: Int,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp),
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            verticalAlignment = Alignment.CenterVertically
         ) {
             // Position Badge
             Box(
@@ -136,27 +137,74 @@ fun RankingItemCard(
                 Text(
                     "$position°",
                     color = Color.White,
-                    fontSize = 24.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            // Avatar
+            AsyncImage(
+                model = candidato.fotoUrl,
+                contentDescription = "Foto de ${candidato.nombre}",
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
 
             // Candidate Info
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    candidato.nombre,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
+                    text = candidato.nombre,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = Black
                 )
-                Text(
-                    candidato.cargo,
-                    fontSize = 12.sp,
-                    color = Color.Gray
-                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = { },
+                        modifier = Modifier
+                            .height(28.dp)
+                            .wrapContentWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue),
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
+                    ) {
+                        Text(
+                            text = candidato.partido,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = White,
+                            fontSize = androidx.compose.ui.unit.TextUnit(10f, androidx.compose.ui.unit.TextUnitType.Sp)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("📍", fontSize = androidx.compose.ui.unit.TextUnit(12f, androidx.compose.ui.unit.TextUnitType.Sp))
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "${candidato.ciudad}, ${candidato.region}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MediumGray
+                    )
+                }
             }
 
             // Votes
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(start = 8.dp)
+            ) {
                 Text(
                     votos.toString(),
                     fontSize = 18.sp,

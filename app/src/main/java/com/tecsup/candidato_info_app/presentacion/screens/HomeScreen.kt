@@ -15,10 +15,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.tecsup.candidato_info_app.navigation.AppScreen
+import com.tecsup.candidato_info_app.presentacion.viewmodel.RankingViewModel
+import com.tecsup.candidato_info_app.presentacion.viewmodel.SharedViewModelProvider
 import com.tecsup.candidato_info_app.ui.theme.*
 import com.tecsup.candidato_info_app.R
 import com.tecsup.candidato_info_app.data.model.FeatureItem
@@ -271,6 +275,9 @@ fun FeatureCardGrid(
 
 @Composable
 fun RankingTab(navController: NavHostController) {
+    val rankingViewModel = SharedViewModelProvider.getRankingViewModel()
+    val ranking by rankingViewModel.ranking.collectAsState()
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "Top 5 Candidatos",
@@ -280,23 +287,24 @@ fun RankingTab(navController: NavHostController) {
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
-        // Mock ranking data
-        val rankingCandidates = listOf(
-            Triple("Rafael Lopez Aliaga", "Renovación Popular", 1),
-            Triple("Rafael Lopez Aliaga", "Renovación Popular", 2),
-            Triple("Rafael Lopez Aliaga", "Renovación Popular", 3),
-            Triple("Rafael Lopez Aliaga", "Renovación Popular", 4),
-            Triple("Rafael Lopez Aliaga", "Renovación Popular", 5)
-        )
-
-        rankingCandidates.forEach { (name, party, position) ->
-            RankingCard(
-                position = position,
-                name = name,
-                party = party,
-                onClick = { navController.navigate(AppScreen.CandidateDetail.createRoute("1")) }
+        if (ranking.isEmpty()) {
+            Text(
+                text = "No hay votos registrados aún",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MediumGray,
+                modifier = Modifier.padding(vertical = 16.dp)
             )
-            Spacer(modifier = Modifier.height(12.dp))
+        } else {
+            ranking.forEachIndexed { index, (candidato, votos) ->
+                RankingCard(
+                    position = index + 1,
+                    name = candidato.nombre,
+                    party = candidato.partido,
+                    votos = votos,
+                    onClick = { navController.navigate(AppScreen.CandidateDetail.createRoute(candidato.id)) }
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
         }
     }
 }
@@ -306,6 +314,7 @@ fun RankingCard(
     position: Int,
     name: String,
     party: String,
+    votos: Int = 0,
     onClick: () -> Unit
 ) {
     Card(
@@ -348,6 +357,21 @@ fun RankingCard(
                 )
                 Text(
                     text = party,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MediumGray
+                )
+            }
+
+            // Votes
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = votos.toString(),
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = PrimaryBlue
+                )
+                Text(
+                    text = "votos",
                     style = MaterialTheme.typography.bodySmall,
                     color = MediumGray
                 )
