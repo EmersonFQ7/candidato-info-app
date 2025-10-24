@@ -3,12 +3,12 @@ package com.tecsup.candidato_info_app.presentacion.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,11 +17,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.tecsup.candidato_info_app.data.model.Candidato
-import com.tecsup.candidato_info_app.data.model.Denuncia
-import com.tecsup.candidato_info_app.data.model.Proyecto
 import com.tecsup.candidato_info_app.presentacion.viewmodel.ComparisonViewModel
 import com.tecsup.candidato_info_app.ui.theme.*
 import com.tecsup.candidato_info_app.presentacion.components.ComparisonCandidateCard
@@ -39,14 +38,14 @@ fun ComparisonScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(BackgroundLight)
+            .background(White)
     ) {
-        // Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
                 .background(PrimaryBlue)
-                .padding(16.dp)
+                .padding(top = 32.dp, bottom = 5.dp, start = 16.dp, end = 16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -54,20 +53,22 @@ fun ComparisonScreen(
             ) {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = White
+                        tint = Color.White
                     )
                 }
                 Text(
-                    text = "Comparar Candidatos",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = White,
+                    "COMPARAR CANDIDATOS",
+                    color = Color.White,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
                 )
             }
         }
+
+
 
         Column(
             modifier = Modifier
@@ -76,17 +77,17 @@ fun ComparisonScreen(
                 .padding(16.dp)
         ) {
             Text(
-                text = "Selecciona candidatos para comparar",
-                style = MaterialTheme.typography.bodyLarge,
+                text = "SELECCIONA CANDIDATOS PARA COMPARAR:",
+                style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.Bold,
                 color = Black
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Selector 1
+            // Selector candidato 1
             CandidateSelectorCard(
-                label = "Candidato 1",
+                label = "CANDIDATO 1",
                 selectedCandidate = candidate1?.nombre ?: "Selecciona un candidato",
                 candidatos = candidatos,
                 onCandidateSelected = { viewModel.selectCandidato1(it) }
@@ -94,9 +95,9 @@ fun ComparisonScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Selector 2
+            // Selector candidato 2
             CandidateSelectorCard(
-                label = "Candidato 2",
+                label = "CANDIDATO 2",
                 selectedCandidate = candidate2?.nombre ?: "Selecciona un candidato",
                 candidatos = candidatos,
                 onCandidateSelected = { viewModel.selectCandidato2(it) }
@@ -104,15 +105,16 @@ fun ComparisonScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Mostrar comparación solo si hay dos candidatos seleccionados
             if (candidate1 != null && candidate2 != null) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        .wrapContentHeight(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.Top
                 ) {
-                    ComparisonCandidateCard(
+
+                ComparisonCandidateCard(
                         name = candidate1!!.nombre,
                         party = candidate1!!.partido,
                         position = candidate1!!.cargo,
@@ -133,29 +135,44 @@ fun ComparisonScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Tabs
-                TabRow(
+                 TabRow(
                     selectedTabIndex = selectedTab,
                     modifier = Modifier.fillMaxWidth(),
                     containerColor = BackgroundLight,
-                    contentColor = PrimaryBlue
+                    contentColor = PrimaryBlue,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.Indicator(
+                            Modifier
+                                .tabIndicatorOffset(tabPositions[selectedTab])
+                                .height(1.dp),
+                            color = Color.Transparent
+                        )
+                    }
                 ) {
-                    Tab(
-                        selected = selectedTab == 0,
-                        onClick = { selectedTab = 0 },
-                        text = { Text("Proyectos") }
-                    )
-                    Tab(
-                        selected = selectedTab == 1,
-                        onClick = { selectedTab = 1 },
-                        text = { Text("Denuncias") }
-                    )
-                    Tab(
-                        selected = selectedTab == 2,
-                        onClick = { selectedTab = 2 },
-                        text = { Text("Resumen") }
-                    )
+                    val tabs = listOf("Proyectos", "Denuncias", "Resumen")
+
+                    tabs.forEachIndexed { index, title ->
+                        Tab(
+                            selected = selectedTab == index,
+                            onClick = { selectedTab = index },
+                            text = {
+                                Text(
+                                    text = title,
+                                    color = if (selectedTab == index) White else PrimaryBlue,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            },
+                            modifier = Modifier
+                                .padding(vertical = 6.dp, horizontal = 8.dp)
+                                .height(32.dp)
+                                .background(
+                                    color = if (selectedTab == index) PrimaryBlue else White,
+                                    shape = RoundedCornerShape(50)
+                                )
+                        )
+                    }
                 }
+
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -194,45 +211,44 @@ fun CandidateSelectorCard(
             Text(
                 text = label,
                 style = MaterialTheme.typography.bodySmall,
-                color = MediumGray
+                color = MediumGray,
+                fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedButton(
-                onClick = { expanded = true },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(44.dp),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Text(
-                    text = selectedCandidate,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Black
-                )
-            }
-
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                candidatos.forEach { candidato ->
-                    DropdownMenuItem(
-                        text = { Text(candidato.nombre) },
-                        onClick = {
-                            onCandidateSelected(candidato)
-                            expanded = false
-                        }
+            Box {
+                OutlinedButton(
+                    onClick = { expanded = true },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(44.dp),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        text = selectedCandidate,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Black
                     )
+                }
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    candidatos.forEach { candidato ->
+                        DropdownMenuItem(
+                            text = { Text(candidato.nombre) },
+                            onClick = {
+                                onCandidateSelected(candidato)
+                                expanded = false
+                            }
+                        )
+                    }
                 }
             }
         }
     }
 }
 
-
-// Helper card for displaying info in tabs
 @Composable
 fun ComparisonInfoCard(title: String, content: @Composable () -> Unit) {
     Card(
@@ -253,7 +269,7 @@ fun ComparisonInfoCard(title: String, content: @Composable () -> Unit) {
 fun ComparisonProjectsTab(candidate1: Candidato, candidate2: Candidato) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(text = candidate1.nombre, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            // Text(text = candidate1.nombre, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
             if (candidate1.proyectos.isNotEmpty()) {
                 candidate1.proyectos.forEach {
                     ComparisonInfoCard(title = it.nombre) {
@@ -265,7 +281,7 @@ fun ComparisonProjectsTab(candidate1: Candidato, candidate2: Candidato) {
             }
         }
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(text = candidate2.nombre, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            // Text(text = candidate2.nombre, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
             if (candidate2.proyectos.isNotEmpty()) {
                 candidate2.proyectos.forEach {
                     ComparisonInfoCard(title = it.nombre) {
@@ -279,17 +295,41 @@ fun ComparisonProjectsTab(candidate1: Candidato, candidate2: Candidato) {
     }
 }
 
+val SuccessGreen = Color(0xFF10B981)
+val ErrorRed = Color(0xFFEF4444)
+val WarningOrange = Color(0xFFF59E0B)
+
+fun estadoColor(estado: String): Color {
+    return when (estado.lowercase()) {
+        "resuelto", "cerrado", "finalizado" -> SuccessGreen
+        "pendiente", "en proceso" -> WarningOrange
+        "rechazado", "cancelado" -> ErrorRed
+        else -> MediumGray
+    }
+}
+
 @Composable
 fun ComparisonDenunciasTab(candidate1: Candidato, candidate2: Candidato) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(text = candidate1.nombre, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
             if (candidate1.denuncias.isNotEmpty()) {
                 candidate1.denuncias.forEach {
                     ComparisonInfoCard(title = it.titulo) {
                         Text(it.descripcion, style = MaterialTheme.typography.bodySmall, color = MediumGray)
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text("Estado: ${it.estado}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
+                        Surface(
+                            color = estadoColor(it.estado),
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier.padding(top = 4.dp)
+                        ) {
+                            Text(
+                                text = "Estado: ${it.estado}",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color.White,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
                     }
                 }
             } else {
@@ -297,13 +337,24 @@ fun ComparisonDenunciasTab(candidate1: Candidato, candidate2: Candidato) {
             }
         }
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(text = candidate2.nombre, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
             if (candidate2.denuncias.isNotEmpty()) {
                 candidate2.denuncias.forEach {
                     ComparisonInfoCard(title = it.titulo) {
                         Text(it.descripcion, style = MaterialTheme.typography.bodySmall, color = MediumGray)
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text("Estado: ${it.estado}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
+                        Surface(
+                            color = estadoColor(it.estado),
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier.padding(top = 4.dp)
+                        ) {
+                            Text(
+                                text = "Estado: ${it.estado}",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color.White,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
                     }
                 }
             } else {
@@ -316,10 +367,12 @@ fun ComparisonDenunciasTab(candidate1: Candidato, candidate2: Candidato) {
 @Composable
 fun ComparisonResumenTab(candidate1: Candidato, candidate2: Candidato) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = SurfaceLight),
-        elevation = CardDefaults.cardElevation(1.dp)
+        elevation = CardDefaults.cardElevation(2.dp)
     ) {
         Row(
             Modifier
@@ -327,37 +380,45 @@ fun ComparisonResumenTab(candidate1: Candidato, candidate2: Candidato) {
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Candidate 1 Summary
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = candidate1.nombre, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Spacer(modifier = Modifier.height(8.dp))
-                SummaryItem(label = "Investigaciones", value = if (candidate1.tieneInvestigaciones) "Sí" else "No")
-                SummaryItem(label = "Denuncias", value = if (candidate1.tieneDenuncias) "Sí" else "No")
-                SummaryItem(label = "N° Proyectos", value = candidate1.proyectos.size.toString())
-                SummaryItem(label = "N° Denuncias", value = candidate1.denuncias.size.toString())
+            // Resumen candidato 1
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                StatItem(label = "Investigaciones", value = if (candidate1.tieneInvestigaciones) "Sí" else "No")
+                StatItem(label = "Denuncias", value = if (candidate1.tieneDenuncias) "Sí" else "No")
+                StatItem(label = "Proyectos", value = candidate1.proyectos.size.toString())
+                StatItem(label = "Denuncias", value = candidate1.denuncias.size.toString())
             }
-            // Candidate 2 Summary
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = candidate2.nombre, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Spacer(modifier = Modifier.height(8.dp))
-                SummaryItem(label = "Investigaciones", value = if (candidate2.tieneInvestigaciones) "Sí" else "No")
-                SummaryItem(label = "Denuncias", value = if (candidate2.tieneDenuncias) "Sí" else "No")
-                SummaryItem(label = "N° Proyectos", value = candidate2.proyectos.size.toString())
-                SummaryItem(label = "N° Denuncias", value = candidate2.denuncias.size.toString())
+
+            // Resumen candidato 2
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                StatItem(label = "Investigaciones", value = if (candidate2.tieneInvestigaciones) "Sí" else "No")
+                StatItem(label = "Denuncias", value = if (candidate2.tieneDenuncias) "Sí" else "No")
+                StatItem(label = "Proyectos", value = candidate2.proyectos.size.toString())
+                StatItem(label = "Denuncias", value = candidate2.denuncias.size.toString())
             }
         }
     }
 }
 
 @Composable
-fun SummaryItem(label: String, value: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+fun StatItem(label: String, value: String) {
+    Surface(
+        shape = RoundedCornerShape(8.dp),
+        color = if (value == "Sí" || value.toIntOrNull() ?: 0 > 0) PrimaryBlue.copy(alpha = 0.1f) else LightGray,
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Text(text = label, style = MaterialTheme.typography.bodyMedium, color = MediumGray)
-        Text(text = value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, color = Black)
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = label, style = MaterialTheme.typography.bodyMedium, color = MediumGray)
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = if (value == "Sí" || value.toIntOrNull() ?: 0 > 0) PrimaryBlue else MediumGray
+            )
+        }
     }
-    Spacer(modifier = Modifier.height(4.dp))
 }

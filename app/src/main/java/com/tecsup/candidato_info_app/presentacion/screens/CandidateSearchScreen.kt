@@ -1,5 +1,7 @@
 package com.tecsup.candidato_info_app.presentacion.screens
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,14 +18,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import com.tecsup.candidato_info_app.R
 import com.tecsup.candidato_info_app.navigation.AppScreen
 import com.tecsup.candidato_info_app.presentacion.viewmodel.SearchViewModel
 import com.tecsup.candidato_info_app.ui.theme.*
-import com.tecsup.candidato_info_app.presentacion.components.CandidateCard
 
 @Composable
 fun CandidateSearchScreen(
@@ -41,21 +47,25 @@ fun CandidateSearchScreen(
 
     val candidatos by viewModel.candidatos.collectAsState()
 
-    val displayCargo = if (selectedCargo.isEmpty()) "Todos los cargos" else selectedCargo
-    val displayPartido = if (selectedPartido.isEmpty()) "Todos los partidos" else selectedPartido
-    val displayRegion = if (selectedRegion.isEmpty()) "Todas las regiones" else selectedRegion
+    val displayCargo = if (selectedCargo.isEmpty()) "Cargo" else selectedCargo
+    val displayPartido = if (selectedPartido.isEmpty()) "Partido Político" else selectedPartido
+    val displayRegion = if (selectedRegion.isEmpty()) "Región" else selectedRegion
+
+
+    val hasActiveFilters = selectedCargo.isNotEmpty() || selectedPartido.isNotEmpty() || selectedRegion.isNotEmpty() || searchQuery.isNotEmpty()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(BackgroundLight)
+            .background(Color(0xFFFFFFFF))
     ) {
         // Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
                 .background(PrimaryBlue)
-                .padding(16.dp)
+                .padding(top = 32.dp, bottom = 5.dp, start = 16.dp, end = 16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -63,27 +73,28 @@ fun CandidateSearchScreen(
             ) {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = White
+                        tint = Color.White
                     )
                 }
                 Text(
-                    text = "Búsqueda de Candidatos",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = White,
+                    "BÚSQUEDA DE CANDIDATOS",
+                    color = Color.White,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
                 )
             }
         }
 
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // Search Bar
+
             TextField(
                 value = searchQuery,
                 onValueChange = { viewModel.updateSearchQuery(it) },
@@ -99,7 +110,7 @@ fun CandidateSearchScreen(
                     )
                 },
                 colors = TextFieldDefaults.colors(
-                    unfocusedContainerColor = White,
+                    unfocusedContainerColor = (Color(0xFFF5F5F5)),
                     focusedContainerColor = White,
                     unfocusedIndicatorColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent
@@ -109,79 +120,98 @@ fun CandidateSearchScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Filters
             Text(
-                text = "Filtros",
-                style = MaterialTheme.typography.bodyLarge,
+                text = "FILTROS:",
+                style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
                 color = Black
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // <CHANGE> Conectar filtros con ViewModel
             FilterDropdown(
-                label = "Cargo",
-                selectedValue = displayCargo,
-                options = listOf("Todos los cargos") + cargos,
-                onSelectionChange = { viewModel.updateCargo(if (it == "Todos los cargos") "" else it) }
+                label = displayCargo,
+                options = listOf("Cargo") + cargos,
+                onSelectionChange = {
+                    viewModel.updateCargo(if (it == "Cargo") "" else it)
+                }
             )
-
 
             Spacer(modifier = Modifier.height(12.dp))
 
             FilterDropdown(
-                label = "Partido",
-                selectedValue = displayPartido,
-                options = listOf("Todos los partidos") + partidos,
-                onSelectionChange = { viewModel.updatePartido(if (it == "Todos los partidos") "" else it) }
+                label = displayPartido,
+                options = listOf("Partido Político") + partidos,
+                onSelectionChange = {
+                    viewModel.updatePartido(if (it == "Partido Político") "" else it)
+                }
             )
-
 
             Spacer(modifier = Modifier.height(12.dp))
 
             FilterDropdown(
-                label = "Región",
-                selectedValue = displayRegion,
-                options = listOf("Todas las regiones") + regiones,
-                onSelectionChange = { viewModel.updateRegion(if (it == "Todas las regiones") "" else it) }
+                label = displayRegion,
+                options = listOf("Región") + regiones,
+                onSelectionChange = {
+                    viewModel.updateRegion(if (it == "Región") "" else it)
+                }
             )
-
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Results
             Text(
-                text = "${candidatos.size} candidatos encontrados",
+                text = "RESULTADOS ENCONTRADOS:",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MediumGray
+                fontWeight = FontWeight.Bold,
+                color = Black
             )
-
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // <CHANGE> Usar LazyColumn con datos del ViewModel
-            LazyColumn(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(candidatos) { candidate ->
-                    // 1. REEMPLAZO: CandidateListItem -> CandidateCard
-                    CandidateCard(
-                        name = candidate.nombre,
-                        party = candidate.partido,
-                        position = candidate.cargo,
-                        location = "${candidate.ciudad}, ${candidate.region}",
+            if (!hasActiveFilters) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFFFFFFF)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.noencontrado),
+                            contentDescription = "No encontrado",
+                            modifier = Modifier.size(200.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
+                }
+            } else {
+                Text(
+                    text = "${candidatos.size} candidatos encontrados",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MediumGray
+                )
 
-                        // 2. AÑADIR PARAMETRO: Pasar la URL de la foto al componente
-                        imageUrl = candidate.fotoUrl,
+                Spacer(modifier = Modifier.height(12.dp))
 
-                        onClick = { navController.navigate(AppScreen.CandidateDetail.createRoute(candidate.id)) }
-                    )
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(candidatos) { candidate ->
+                        CandidateSearchCard(
+                            name = candidate.nombre,
+                            party = candidate.partido,
+                            position = candidate.cargo,
+                            location = "${candidate.ciudad}, ${candidate.region}",
+                            imageUrl = candidate.fotoUrl,
+                            onClick = { navController.navigate(AppScreen.CandidateDetail.createRoute(candidate.id)) }
+                        )
+                    }
                 }
             }
-
-
         }
     }
 }
@@ -189,7 +219,6 @@ fun CandidateSearchScreen(
 @Composable
 fun FilterDropdown(
     label: String,
-    selectedValue: String,
     options: List<String>,
     onSelectionChange: (String) -> Unit
 ) {
@@ -200,39 +229,35 @@ fun FilterDropdown(
             onClick = { expanded = true },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp),
+                .height(52.dp),
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = White,
                 contentColor = Black
             ),
-            border = ButtonDefaults.outlinedButtonBorder
+            border = BorderStroke(1.dp, Color(0xFFCCCCCC)),
+            contentPadding = PaddingValues(0.dp)
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                    .padding(start = 12.dp, end = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
-                    Text(
-                        text = label,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MediumGray
-                    )
-                    Text(
-                        text = selectedValue,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Black,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
-                    tint = MediumGray,
-                    modifier = Modifier.size(20.dp)
+                    tint = Color(0xFF666666),
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(end = 8.dp)
+                )
+
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color(0xFF666666),
+                    fontWeight = FontWeight.Medium
                 )
             }
         }
@@ -256,11 +281,12 @@ fun FilterDropdown(
 }
 
 @Composable
-fun CandidateListItem(
+fun CandidateSearchCard(
     name: String,
     party: String,
     position: String,
     location: String,
+    imageUrl: String,
     onClick: () -> Unit
 ) {
     Card(
@@ -268,7 +294,7 @@ fun CandidateListItem(
             .fillMaxWidth()
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceLight),
+        colors = CardDefaults.cardColors(containerColor = White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
@@ -277,16 +303,14 @@ fun CandidateListItem(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Avatar
-            Box(
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = name,
                 modifier = Modifier
                     .size(56.dp)
-                    .clip(CircleShape)
-                    .background(Color(0xFFE5A76F)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("👤", fontSize = androidx.compose.ui.unit.TextUnit(24f, androidx.compose.ui.unit.TextUnitType.Sp))
-            }
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
 
             Spacer(modifier = Modifier.width(12.dp))
 
@@ -300,7 +324,8 @@ fun CandidateListItem(
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
                         onClick = { },
@@ -313,21 +338,17 @@ fun CandidateListItem(
                         Text(
                             text = party,
                             style = MaterialTheme.typography.labelSmall,
-                            color = White
+                            color = White,
+                            fontSize = androidx.compose.ui.unit.TextUnit(10f, androidx.compose.ui.unit.TextUnitType.Sp)
                         )
                     }
-                    Text(
-                        text = position,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MediumGray
-                    )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("📍", fontSize = androidx.compose.ui.unit.TextUnit(14f, androidx.compose.ui.unit.TextUnitType.Sp))
+                    Text("📍", fontSize = androidx.compose.ui.unit.TextUnit(12f, androidx.compose.ui.unit.TextUnitType.Sp))
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = location,
@@ -339,3 +360,4 @@ fun CandidateListItem(
         }
     }
 }
+

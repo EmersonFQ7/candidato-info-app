@@ -1,19 +1,11 @@
+
 package com.tecsup.candidato_info_app.presentacion.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,15 +13,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
-import coil.compose.AsyncImage // Usamos la librería Coil
-import com.tecsup.candidato_info_app.ui.theme.Black
-import com.tecsup.candidato_info_app.ui.theme.MediumGray
-import com.tecsup.candidato_info_app.ui.theme.LightGray
-import com.tecsup.candidato_info_app.ui.theme.PrimaryBlue
-import com.tecsup.candidato_info_app.ui.theme.SurfaceLight
+import coil.compose.AsyncImage
+import com.tecsup.candidato_info_app.ui.theme.*
 
 @Composable
 fun ComparisonCandidateCard(
@@ -37,7 +24,7 @@ fun ComparisonCandidateCard(
     party: String,
     position: String,
     location: String,
-    imageUrl: String, // <-- ¡NUEVO PARÁMETRO DE IMAGEN!
+    imageUrl: String,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -48,27 +35,66 @@ fun ComparisonCandidateCard(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(18.dp),
+                .fillMaxWidth()
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // REEMPLAZO DEL AVATAR ESTÁTICO POR ASYNCIMAGE DE COIL
             AsyncImage(
-                model = imageUrl, // La URL única de la foto del Candidato
-                contentDescription = "Foto del Candidato para Comparación: $name",
-                contentScale = ContentScale.Crop, // Escala para llenar el círculo
+                model = imageUrl,
+                contentDescription = "Foto de $name",
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(60.dp) // Tamaño similar al anterior (60.dp)
+                    .size(90.dp)
                     .clip(CircleShape)
-                    .background(LightGray), // Placeholder si la carga falla
+                    .background(LightGray)
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(name, fontWeight = FontWeight.Bold, color = Black)
-            Text(party, color = PrimaryBlue)
-            Text(position, color = MediumGray)
-            Text(location, color = MediumGray)
+            Text(
+                text = name,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = Black,
+                maxLines = 2,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Surface(
+                color = PrimaryBlue,
+                shape = RoundedCornerShape(50),
+                modifier = Modifier.padding(top = 2.dp)
+            ) {
+                Text(
+                    text = party,
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                    maxLines = 1
+                )
+            }
+
+            Text(
+                text = position,
+                style = MaterialTheme.typography.bodySmall,
+                color = MediumGray
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "📍",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = location,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MediumGray
+                )
+            }
+
         }
     }
 }
