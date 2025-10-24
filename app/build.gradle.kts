@@ -53,6 +53,7 @@ dependencies {
 
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.foundation)
+    implementation(libs.foundation)
     testImplementation(libs.junit)
     implementation("io.coil-kt:coil-compose:2.6.0")
     androidTestImplementation(libs.androidx.junit)

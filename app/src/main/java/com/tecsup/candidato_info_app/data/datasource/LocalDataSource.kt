@@ -942,31 +942,37 @@ private val proyectos6 = listOf(
     fun getNoticias(): List<Noticia> = listOf(
         Noticia(
             id = "noticia_1",
-            titulo = "Tech Giants Report Strong Q4 Earnings Despite Market Volatility",
-            descripcion = "Major technology companies exceeded expectations in their quarterly reports, showing resilience in...",
-            contenido = "Major technology companies exceeded expectations in their quarterly reports, showing resilience in the face of market volatility. The sector continues to demonstrate strong growth potential.",
-            fecha = "2024-01-15",
-            imagen = "noticia_1",
-            fuente = "Reuters"
+            titulo = "Jefe de la ONPE supervisa avances en la organización de elecciones",
+            descripcion = "Para atender las Elecciones Primarias, la ONPE ha conformado 14 oficinas descentralizadas...",
+            fecha = "2025-01-15",
+            fotoUrl = "https://cdn.www.gob.pe/uploads/document/file/8876812/1271285-fachada700x395.jpg",
+            fuente = "ONPE"
         ),
         Noticia(
             id = "noticia_2",
             titulo = "Nuevas regulaciones electorales para 2026",
             descripcion = "El JNE anuncia cambios importantes en los procesos electorales...",
-            contenido = "El Jurado Nacional de Elecciones ha anunciado nuevas regulaciones que entrarán en vigor para las elecciones de 2026.",
-            fecha = "2024-01-14",
-            imagen = "noticia_2",
+            fecha = "2025-01-14",
+            fotoUrl = "https://cdn.www.gob.pe/uploads/document/file/8865165/1269839-jefe-de-la-onpe-supervisa-avances-en-la-organizacion-de-elecciones.jpg",
             fuente = "JNE"
         ),
         Noticia(
             id = "noticia_3",
             titulo = "Candidatos presidenciales presentan propuestas de desarrollo",
             descripcion = "Los principales candidatos presentaron sus planes de gobierno...",
-            contenido = "Los principales candidatos a la presidencia presentaron sus planes de gobierno enfocados en desarrollo económico y social.",
-            fecha = "2024-01-13",
-            imagen = "noticia_3",
+            fecha = "2025-01-13",
+            fotoUrl = "https://cdn.www.gob.pe/uploads/document/file/8868023/1270287-conadis-premia-a-la-onpe-en-concurso-de-buenas-practicas.jpg",
             fuente = "Congreso"
-        )
+        ),
+
+        Noticia(
+        id = "noticia_4",
+        titulo = "CONADIS premia a la ONPE en concurso de buenas prácticas",
+        descripcion = "Por facilitar la votación de personas con discapacidad...",
+        fecha = "2025-10-22",
+        fotoUrl = "https://cdn.www.gob.pe/uploads/document/file/8865166/1269839-jefe-de-la-onpe-supervisa-avances-en-la-organizacion-de-elecciones.jpg",
+        fuente = "CONADIS"
+    )
     )
 
     // <CHANGE> Agregar datos simulados de datos importantes

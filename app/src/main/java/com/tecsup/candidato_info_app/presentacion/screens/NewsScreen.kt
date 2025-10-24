@@ -86,31 +86,28 @@ fun NewsCard(noticia: Noticia) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp),
+            .wrapContentHeight(),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            // Image
+        Column(modifier = Modifier.fillMaxSize()) {
+
+            // Imagen principal de la noticia
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp)
                     .background(Color.LightGray)
             ) {
-                val encodedTitle = URLEncoder.encode(noticia.titulo, "UTF-8")
                 AsyncImage(
-                    model = "https://via.placeholder.com/400x200?text=$encodedTitle",
-
+                    model = noticia.fotoUrl, // 👉 Usa la URL real
                     contentDescription = noticia.titulo,
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
                 )
             }
 
-            // Content
+            // Contenido textual
             Column(
                 modifier = Modifier
                     .fillMaxSize()

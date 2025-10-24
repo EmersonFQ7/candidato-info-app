@@ -4,8 +4,7 @@ data class Noticia(
     val id: String,
     val titulo: String,
     val descripcion: String,
-    val contenido: String,
     val fecha: String,
-    val imagen: String,
+    val fotoUrl: String,
     val fuente: String
 )
