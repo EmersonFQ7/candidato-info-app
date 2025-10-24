@@ -51,7 +51,7 @@ fun CandidateSearchScreen(
     val displayPartido = if (selectedPartido.isEmpty()) "Partido Político" else selectedPartido
     val displayRegion = if (selectedRegion.isEmpty()) "Región" else selectedRegion
 
-    // <CHANGE> Determinar si hay filtros activos
+
     val hasActiveFilters = selectedCargo.isNotEmpty() || selectedPartido.isNotEmpty() || selectedRegion.isNotEmpty() || searchQuery.isNotEmpty()
 
     Column(
@@ -94,7 +94,7 @@ fun CandidateSearchScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // Search Bar
+
             TextField(
                 value = searchQuery,
                 onValueChange = { viewModel.updateSearchQuery(it) },
@@ -120,7 +120,6 @@ fun CandidateSearchScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Filters Label
             Text(
                 text = "FILTROS:",
                 style = MaterialTheme.typography.bodyMedium,
@@ -130,7 +129,6 @@ fun CandidateSearchScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // <CHANGE> Filtros con diseño mejorado según Figma
             FilterDropdown(
                 label = displayCargo,
                 options = listOf("Cargo") + cargos,
@@ -161,7 +159,6 @@ fun CandidateSearchScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Results Label
             Text(
                 text = "RESULTADOS ENCONTRADOS:",
                 style = MaterialTheme.typography.bodyMedium,
@@ -171,7 +168,6 @@ fun CandidateSearchScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // <CHANGE> Mostrar imagen de placeholder si no hay filtros activos
             if (!hasActiveFilters) {
                 Box(
                     modifier = Modifier
@@ -192,7 +188,6 @@ fun CandidateSearchScreen(
                     }
                 }
             } else {
-                // <CHANGE> Mostrar resultados cuando hay filtros activos
                 Text(
                     text = "${candidatos.size} candidatos encontrados",
                     style = MaterialTheme.typography.bodySmall,
@@ -308,7 +303,6 @@ fun CandidateSearchCard(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Avatar
             AsyncImage(
                 model = imageUrl,
                 contentDescription = name,

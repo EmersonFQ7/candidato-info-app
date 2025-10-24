@@ -40,7 +40,6 @@ fun ComparisonScreen(
             .fillMaxSize()
             .background(White)
     ) {
-        // Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -106,7 +105,6 @@ fun ComparisonScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 🔹 Mostrar comparación si ambos están seleccionados
             if (candidate1 != null && candidate2 != null) {
                 Row(
                     modifier = Modifier
@@ -137,8 +135,7 @@ fun ComparisonScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Tabs
-                TabRow(
+                 TabRow(
                     selectedTabIndex = selectedTab,
                     modifier = Modifier.fillMaxWidth(),
                     containerColor = BackgroundLight,
@@ -147,7 +144,7 @@ fun ComparisonScreen(
                         TabRowDefaults.Indicator(
                             Modifier
                                 .tabIndicatorOffset(tabPositions[selectedTab])
-                                .height(0.dp), // ocultamos el subrayado
+                                .height(1.dp),
                             color = Color.Transparent
                         )
                     }
@@ -191,7 +188,6 @@ fun ComparisonScreen(
     }
 }
 
-// 🔽 Candidate selector card
 @Composable
 fun CandidateSelectorCard(
     label: String,
@@ -253,7 +249,6 @@ fun CandidateSelectorCard(
     }
 }
 
-// 🔹 Card auxiliar para info de pestañas
 @Composable
 fun ComparisonInfoCard(title: String, content: @Composable () -> Unit) {
     Card(
@@ -270,7 +265,6 @@ fun ComparisonInfoCard(title: String, content: @Composable () -> Unit) {
     }
 }
 
-// 🔹 Pestaña de proyectos
 @Composable
 fun ComparisonProjectsTab(candidate1: Candidato, candidate2: Candidato) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -301,7 +295,6 @@ fun ComparisonProjectsTab(candidate1: Candidato, candidate2: Candidato) {
     }
 }
 
-// 🔹 Pestaña de denuncias
 val SuccessGreen = Color(0xFF10B981)
 val ErrorRed = Color(0xFFEF4444)
 val WarningOrange = Color(0xFFF59E0B)
@@ -319,7 +312,6 @@ fun estadoColor(estado: String): Color {
 fun ComparisonDenunciasTab(candidate1: Candidato, candidate2: Candidato) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            // Nombre del candidato eliminado
             if (candidate1.denuncias.isNotEmpty()) {
                 candidate1.denuncias.forEach {
                     ComparisonInfoCard(title = it.titulo) {
@@ -345,7 +337,6 @@ fun ComparisonDenunciasTab(candidate1: Candidato, candidate2: Candidato) {
             }
         }
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            // Nombre del candidato eliminado
             if (candidate2.denuncias.isNotEmpty()) {
                 candidate2.denuncias.forEach {
                     ComparisonInfoCard(title = it.titulo) {
@@ -373,7 +364,6 @@ fun ComparisonDenunciasTab(candidate1: Candidato, candidate2: Candidato) {
     }
 }
 
-// 🔹 Pestaña de resumen mejorada
 @Composable
 fun ComparisonResumenTab(candidate1: Candidato, candidate2: Candidato) {
     Card(
@@ -409,7 +399,6 @@ fun ComparisonResumenTab(candidate1: Candidato, candidate2: Candidato) {
     }
 }
 
-// 🔹 Item estadístico más visual
 @Composable
 fun StatItem(label: String, value: String) {
     Surface(

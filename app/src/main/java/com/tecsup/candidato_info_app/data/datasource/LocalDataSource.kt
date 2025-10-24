@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 object LocalDataSource {
-    // Estado observable para cambios de ranking
     val rankingUpdated: StateFlow<Unit> = VotePersistence.rankingUpdated
     private val proyectos1 = listOf(
         Proyecto(
@@ -977,7 +976,7 @@ private val proyectos6 = listOf(
     )
     )
 
-    // <CHANGE> Agregar datos simulados de datos importantes
+    // Datos importantes
     fun getDatosImportantes(): List<DatoImportante> = listOf(
         DatoImportante(
             id = "dato_1",
@@ -1012,7 +1011,7 @@ private val proyectos6 = listOf(
          )
     )
 
-    // <CHANGE> Sistema de votos con persistencia
+    // Votacion
     fun registrarVoto(candidatoId: String) {
         VotePersistence.registrarVoto(candidatoId)
     }

@@ -99,27 +99,25 @@ fun HomeScreen(navController: NavHostController) {
             }
         }
 
-        // Zona azul con tabs y contenido
-        Column(
+         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 280.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
             var selectedTab by remember { mutableStateOf(0) }
 
-            // Tabs personalizados para que uno sea azul y otro blanco según selección
-            Box(
+             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(44.dp)
                     .border(2.dp, PrimaryBlue, RoundedCornerShape(22.dp)) // borde azul
                     .clip(RoundedCornerShape(22.dp))
-                    .background(Color.White) // fondo blanco del contenedor
+                    .background(Color.White)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(4.dp), // espacio para ver el borde
+                        .padding(4.dp),
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     TabButton(
@@ -177,7 +175,7 @@ fun TabButton(
 
 @Composable
 fun WhatCanIDoGrid(navController: NavHostController) {
-    // Usamos LazyVerticalGrid para 2 columnas
+    // LazyVerticalGrid para 2 columnas
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier.fillMaxHeight(),
@@ -229,7 +227,7 @@ fun FeatureCardGrid(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp) // altura fija para mantener proporción
+            .height(300.dp)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -250,8 +248,7 @@ fun FeatureCardGrid(
                     .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
             )
 
-            // Texto inferior
-            Column(
+             Column(
                 modifier = Modifier
                     .padding(12.dp)
                     .fillMaxWidth()
@@ -332,8 +329,7 @@ fun RankingCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Position Badge
-            Box(
+             Box(
                 modifier = Modifier
                     .size(48.dp)
                     .background(PrimaryBlue, RoundedCornerShape(8.dp)),
@@ -347,8 +343,7 @@ fun RankingCard(
                 )
             }
 
-            // Candidate Info
-            Column(modifier = Modifier.weight(1f)) {
+             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = name,
                     style = MaterialTheme.typography.bodyMedium,
@@ -362,8 +357,7 @@ fun RankingCard(
                 )
             }
 
-            // Votes
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = votos.toString(),
                     style = MaterialTheme.typography.headlineSmall,

@@ -40,18 +40,16 @@ fun ComparisonCandidateCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // 📸 Imagen del candidato (más grande y circular)
             AsyncImage(
                 model = imageUrl,
                 contentDescription = "Foto de $name",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(90.dp) // Aumentado tamaño
+                    .size(90.dp)
                     .clip(CircleShape)
                     .background(LightGray)
             )
 
-            // 🧑‍💼 Nombre
             Text(
                 text = name,
                 style = MaterialTheme.typography.bodyLarge,
@@ -62,7 +60,6 @@ fun ComparisonCandidateCard(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // 🟦 Partido político dentro de píldora azul
             Surface(
                 color = PrimaryBlue,
                 shape = RoundedCornerShape(50),
@@ -77,14 +74,12 @@ fun ComparisonCandidateCard(
                 )
             }
 
-            // 🏛️ Cargo
             Text(
                 text = position,
                 style = MaterialTheme.typography.bodySmall,
                 color = MediumGray
             )
 
-            // 📍 Ubicación
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -92,7 +87,7 @@ fun ComparisonCandidateCard(
                     text = "📍",
                     style = MaterialTheme.typography.bodySmall
                 )
-                Spacer(modifier = Modifier.width(4.dp)) // Espacio pequeño entre ícono y texto
+                Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = location,
                     style = MaterialTheme.typography.bodySmall,

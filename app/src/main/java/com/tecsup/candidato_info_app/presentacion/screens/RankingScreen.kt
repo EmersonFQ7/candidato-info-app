@@ -33,8 +33,8 @@ fun RankingScreen(
     navController: NavHostController,
     viewModel: RankingViewModel = SharedViewModelProvider.getRankingViewModel()
 ) {
-    val cargos = viewModel.cargos.collectAsState()
-    val selectedCargo = viewModel.selectedCargo.collectAsState()
+    //val cargos = viewModel.cargos.collectAsState()
+    //val selectedCargo = viewModel.selectedCargo.collectAsState()
     val ranking = viewModel.ranking.collectAsState()
 
     Column(
@@ -81,11 +81,11 @@ fun RankingScreen(
                 text = "TOP 5 CANDIDATOS",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
-                color = White,
+                color = Color(0xFFFFFFFF),
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            // Ranking List
+            // Ranking LISTA
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -127,7 +127,7 @@ fun RankingCandidateCard(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Position Badge
+
             Box(
                 modifier = Modifier
                     .size(50.dp)
@@ -144,7 +144,7 @@ fun RankingCandidateCard(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Avatar
+            // Puesto
             AsyncImage(
                 model = candidato.fotoUrl,
                 contentDescription = "Foto de ${candidato.nombre}",
@@ -156,7 +156,7 @@ fun RankingCandidateCard(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Candidate Info
+            // INFO DEL CANDIDATO
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = candidato.nombre,
@@ -200,7 +200,7 @@ fun RankingCandidateCard(
                 }
             }
 
-            // Votes
+            // Votos
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(start = 8.dp)

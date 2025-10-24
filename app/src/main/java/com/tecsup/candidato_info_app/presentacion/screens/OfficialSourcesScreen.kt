@@ -1,6 +1,6 @@
 package com.tecsup.candidato_info_app.presentacion.screens
 
-import android.content.Intent
+import android.content.Intent // Para abrir una URL externa
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -34,8 +34,7 @@ fun OfficialSourcesScreen(navController: NavHostController) {
             .fillMaxSize()
             .background(BackgroundLight)
     ) {
-        // ===== Header =====
-        Box(
+         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
@@ -64,7 +63,7 @@ fun OfficialSourcesScreen(navController: NavHostController) {
             }
         }
 
-        // ===== Body (ahora en 2 columnas) =====
+        //  en 2 columnas
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier
@@ -184,7 +183,7 @@ fun OfficialSourceCard(
                 )
             }
 
-            // === Botón ===
+            // Boton Visitar aqui ya se esta usando Intent el abrir una URL externa
             Button(
                 onClick = {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))

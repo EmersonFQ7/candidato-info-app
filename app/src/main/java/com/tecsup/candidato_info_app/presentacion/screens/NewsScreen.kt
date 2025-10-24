@@ -39,8 +39,7 @@ fun NewsScreen(
             .fillMaxSize()
             .background(Color.White)
     ) {
-        // Header
-        Box(
+         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
@@ -68,8 +67,7 @@ fun NewsScreen(
             }
         }
 
-        // News List
-        LazyColumn(
+         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
@@ -91,7 +89,7 @@ fun NewsCard(noticia: Noticia) {
             .wrapContentHeight(),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFdbdbdb) // Gris medio claro
+            containerColor = Color(0xFFdbdbdb)
         ),
 
     ) {
@@ -107,7 +105,7 @@ fun NewsCard(noticia: Noticia) {
                     .background(Color.LightGray)
             ) {
                 AsyncImage(
-                    model = noticia.fotoUrl, // 👉 Usa la URL real
+                    model = noticia.fotoUrl,
                     contentDescription = noticia.titulo,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,

@@ -117,7 +117,6 @@ fun CandidateDetailScreen(
                                 .padding(20.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            // Imagen del candidato
                             AsyncImage(
                                 model = cand.fotoUrl,
                                 contentDescription = "Foto de ${cand.nombre}",
@@ -138,7 +137,6 @@ fun CandidateDetailScreen(
 
                             Spacer(modifier = Modifier.height(8.dp))
 
-                            // Botón del partido
                             Button(
                                 onClick = { },
                                 modifier = Modifier.height(28.dp),
@@ -164,14 +162,14 @@ fun CandidateDetailScreen(
                             Spacer(modifier = Modifier.height(4.dp))
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center // opcional, centra todo horizontalmente
+                                horizontalArrangement = Arrangement.Center
                             ) {
                                 Text(
                                     text = "📍",
                                     fontSize = 14.sp,
                                     color = MediumGray
                                 )
-                                Spacer(modifier = Modifier.width(4.dp)) // pequeño espacio entre el ícono y el texto
+                                Spacer(modifier = Modifier.width(4.dp))
                                 Text(
                                     text = "${cand.ciudad}, ${cand.region}",
                                     style = MaterialTheme.typography.bodySmall,
@@ -200,7 +198,6 @@ fun CandidateDetailScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Alerta de denuncias
                 val hasDenuncias = cand.denuncias.isNotEmpty()
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -264,7 +261,7 @@ fun CandidateDetailScreen(
                             },
                             modifier = Modifier
                                 .padding(vertical = 6.dp, horizontal = 8.dp)
-                                .height(32.dp) // controla altura total de la pastilla
+                                .height(32.dp)
 
                                 .background(
                                     color = if (selectedTab == index) PrimaryBlue else White,
@@ -294,8 +291,7 @@ fun CandidateDetailScreen(
             onConfirm = { 
                 candidate?.let { cand ->
                     votingViewModel.registrarVoto(cand.id)
-                    // Mostrar feedback visual
-                    votingStep = 2 // Nuevo paso para mostrar confirmación
+                     votingStep = 2
                 }
                 showVotingModal = false
                 votingStep = 0
@@ -306,9 +302,6 @@ fun CandidateDetailScreen(
     }
 }
 
-// --------------------------------------------------------------------
-// MODAL DE VOTACIÓN
-// --------------------------------------------------------------------
 @Composable
 fun VotingModal(
     onDismiss: () -> Unit,
@@ -369,9 +362,6 @@ fun VotingModal(
     )
 }
 
-// --------------------------------------------------------------------
-// TABS
-// --------------------------------------------------------------------
 @Composable
 fun ProjectsTabContent(proyectos: List<Proyecto>) {
     Column(modifier = Modifier.fillMaxWidth()) {

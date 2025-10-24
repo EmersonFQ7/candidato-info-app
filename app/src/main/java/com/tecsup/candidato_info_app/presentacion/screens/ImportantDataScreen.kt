@@ -40,8 +40,7 @@ fun ImportantDataScreen(navController: NavHostController) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        // Header
-        Box(
+         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
@@ -69,8 +68,7 @@ fun ImportantDataScreen(navController: NavHostController) {
             }
         }
 
-        // Title
-        Column(
+         Column(
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .fillMaxWidth(),
@@ -111,7 +109,6 @@ fun ImportantDataScreen(navController: NavHostController) {
     }
 }
 
-// Composable reutilizable para Row con Icono y Texto
 @Composable
 fun RowConIcono(
     iconoResId: Int,
@@ -152,7 +149,7 @@ fun AccordionItem(
             .background(Color.White)
             .clickable(
                 indication = null,
-                interactionSource = remember { MutableInteractionSource() } // evita ripple gris
+                interactionSource = remember { MutableInteractionSource() }
             ) {
                 onToggle()
             }
@@ -337,7 +334,7 @@ fun IconoConTexto(
     iconoResId: Int,
     titulo: String,
     subtitulo: String,
-    iconSize: Dp = 60.dp // tamaño por defecto
+    iconSize: Dp = 60.dp
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

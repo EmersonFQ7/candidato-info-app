@@ -12,7 +12,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Inicializar persistencia de votos
+        // esto va inicializar la persistencia de votos
         VotePersistence.initialize(this)
         
         setContent {
