@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.tecsup.candidato_info_app.data.model.Candidato
@@ -41,12 +42,14 @@ fun ComparisonScreen(
             .fillMaxSize()
             .background(BackgroundLight)
     ) {
+
         // Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
                 .background(PrimaryBlue)
-                .padding(16.dp)
+                .padding(top = 32.dp, bottom = 5.dp, start = 16.dp, end = 16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -54,20 +57,22 @@ fun ComparisonScreen(
             ) {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = White
+                        tint = Color.White
                     )
                 }
                 Text(
-                    text = "Comparar Candidatos",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = White,
+                    "COMPARAR CANDIDATOS",
+                    color = Color.White,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
                 )
             }
         }
+
+
 
         Column(
             modifier = Modifier

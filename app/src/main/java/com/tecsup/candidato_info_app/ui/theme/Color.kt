@@ -9,7 +9,7 @@ val PrimaryBlueDark = Color(0xff013a8f)
 // Neutral Colors
 val White = Color(0xFFFFFFFF)
 val LightGray = Color(0xFFF5F5F5)
-val MediumGray = Color(0xFF9CA3AF)
+val MediumGray = Color(0xffb0b0b0)
 val DarkGray = Color(0xFF4B5563)
 val Black = Color(0xFF1F2937)
 

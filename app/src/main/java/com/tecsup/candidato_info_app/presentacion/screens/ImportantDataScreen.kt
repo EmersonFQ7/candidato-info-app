@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -36,8 +37,9 @@ fun ImportantDataScreen(navController: NavHostController,) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
                 .background(PrimaryBlue)
-                .padding(16.dp)
+                .padding(top = 32.dp, bottom = 5.dp, start = 16.dp, end = 16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),

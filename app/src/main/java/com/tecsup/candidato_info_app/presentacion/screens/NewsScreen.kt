@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.tecsup.candidato_info_app.data.model.Noticia
 import com.tecsup.candidato_info_app.presentacion.viewmodel.NewsViewModel
+import com.tecsup.candidato_info_app.ui.theme.MediumGray
 import com.tecsup.candidato_info_app.ui.theme.PrimaryBlue
 import java.net.URLEncoder
 
@@ -42,8 +43,9 @@ fun NewsScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
                 .background(PrimaryBlue)
-                .padding(16.dp)
+                .padding(top = 32.dp, bottom = 5.dp, start = 16.dp, end = 16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -88,15 +90,20 @@ fun NewsCard(noticia: Noticia) {
             .fillMaxWidth()
             .wrapContentHeight(),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFdbdbdb) // Gris medio claro
+        ),
+
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+
+
+    Column(modifier = Modifier.fillMaxSize()) {
 
             // Imagen principal de la noticia
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp)
+                    .height(200.dp)
                     .background(Color.LightGray)
             ) {
                 AsyncImage(

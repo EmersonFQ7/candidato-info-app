@@ -22,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -62,8 +63,9 @@ fun CandidateSearchScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
                 .background(PrimaryBlue)
-                .padding(vertical = 16.dp, horizontal = 16.dp)
+                .padding(top = 32.dp, bottom = 5.dp, start = 16.dp, end = 16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -71,20 +73,21 @@ fun CandidateSearchScreen(
             ) {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = White
+                        tint = Color.White
                     )
                 }
                 Text(
-                    text = "BÚSQUEDA DE CANDIDATOS",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = White,
+                    "BÚSQUEDA DE CANDIDATOS",
+                    color = Color.White,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
                 )
             }
         }
+
 
         Column(
             modifier = Modifier

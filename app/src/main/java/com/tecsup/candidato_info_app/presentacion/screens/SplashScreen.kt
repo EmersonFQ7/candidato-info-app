@@ -32,7 +32,6 @@ fun SplashScreen(navController: NavHostController) {
             popUpTo("splash") { inclusive = true }
         }
     }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -46,7 +45,6 @@ fun SplashScreen(navController: NavHostController) {
                 modifier = Modifier.size(210.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
-
         }
     }
 }
