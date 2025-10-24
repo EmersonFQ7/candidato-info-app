@@ -1,5 +1,6 @@
 package com.tecsup.candidato_info_app.presentacion.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -9,46 +10,48 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.tecsup.candidato_info_app.presentacion.viewmodel.CandidateViewModel
-import com.tecsup.candidato_info_app.ui.theme.*
-import com.tecsup.candidato_info_app.data.model.Candidato
+import coil.compose.AsyncImage
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.ui.unit.sp
 import com.tecsup.candidato_info_app.data.model.HistorialPolitico
 import com.tecsup.candidato_info_app.data.model.Proyecto
-
-// Imports requeridos para la carga de imágenes dinámicas
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.TextUnitType
-import androidx.compose.foundation.layout.Box
-import com.tecsup.candidato_info_app.ui.theme.LightGray
-import coil.compose.AsyncImage
-
+import com.tecsup.candidato_info_app.presentacion.viewmodel.CandidateViewModel
+import com.tecsup.candidato_info_app.presentacion.viewmodel.SharedViewModelProvider
+import com.tecsup.candidato_info_app.ui.theme.*
+import com.tecsup.candidato_info_app.R
+import com.tecsup.candidato_info_app.presentacion.viewmodel.VotingViewModel
 
 @Composable
 fun CandidateDetailScreen(
     navController: NavHostController,
     candidateId: String,
-    viewModel: CandidateViewModel = viewModel()
+    viewModel: CandidateViewModel = viewModel(),
+    votingViewModel: VotingViewModel = SharedViewModelProvider.getVotingViewModel()
 ) {
     var selectedTab by remember { mutableStateOf(0) }
+    var showVotingModal by remember { mutableStateOf(false) }
+    var votingStep by remember { mutableStateOf(0) }
 
-    // <CHANGE> Cargar candidato del ViewModel
     LaunchedEffect(candidateId) {
         viewModel.getCandidatoById(candidateId)
     }
 
     val candidate by viewModel.candidato.collectAsState()
 
-    // Contenedor principal
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,8 +61,9 @@ fun CandidateDetailScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
                 .background(PrimaryBlue)
-                .padding(16.dp)
+                .padding(top = 32.dp, bottom = 5.dp, start = 16.dp, end = 16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -67,20 +71,21 @@ fun CandidateDetailScreen(
             ) {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = White
+                        tint = Color.White
                     )
                 }
                 Text(
-                    text = "Perfil del Candidato",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = White,
+                    "PERFIL DEL CANDIDATO",
+                    color = Color.White,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
                 )
             }
         }
+
 
         Column(
             modifier = Modifier
@@ -88,83 +93,109 @@ fun CandidateDetailScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
-            // Inicio del bloque de seguridad: cand solo existe aquí dentro
             candidate?.let { cand ->
 
-                // --- 1. CANDIDATE CARD (Implementación de AsyncImage) ---
-                Card(
+                Box(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = SurfaceLight),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    contentAlignment = Alignment.BottomEnd
                 ) {
-                    Column(
+                    Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        // REEMPLAZO: Usar AsyncImage con URL del candidato
-                        AsyncImage(
-                            model = cand.fotoUrl,
-                            contentDescription = "Foto de ${cand.nombre}",
+                            .padding(horizontal = 1.dp, vertical = 1.dp)
+                            .shadow(8.dp, RoundedCornerShape(16.dp)),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(containerColor = White),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                    )
+
+
+                    {
+                        Column(
                             modifier = Modifier
-                                .size(100.dp)
-                                .clip(CircleShape),
-                            contentScale = ContentScale.Crop,
-
-                        )
-
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Text(
-                            text = cand.nombre,
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = Black
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Button(
-                            onClick = { },
-                            modifier = Modifier.height(32.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue),
-                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
+                                .fillMaxWidth()
+                                .padding(20.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(
-                                text = cand.partido,
-                                style = MaterialTheme.typography.labelSmall,
-                                color = White
+                            AsyncImage(
+                                model = cand.fotoUrl,
+                                contentDescription = "Foto de ${cand.nombre}",
+                                modifier = Modifier
+                                    .size(110.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
                             )
-                        }
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                            Spacer(modifier = Modifier.height(12.dp))
 
-                        Text(
-                            text = cand.cargo,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MediumGray
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text("📍", fontSize = 16.sp) // Usando .sp directo
-                            Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "${cand.ciudad}, ${cand.region}",
+                                text = cand.nombre,
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Black
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Button(
+                                onClick = { },
+                                modifier = Modifier.height(28.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue),
+                                shape = RoundedCornerShape(50),
+                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
+                            ) {
+                                Text(
+                                    text = cand.partido,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = White
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Text(
+                                text = cand.cargo,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MediumGray
                             )
+
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = "📍",
+                                    fontSize = 14.sp,
+                                    color = MediumGray
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "${cand.ciudad}, ${cand.region}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MediumGray
+                                )
+                            }
+
                         }
                     }
-                } // Fin del Card de Perfil
 
-                // --- 2. STATUS ALERT ---
+
+                    IconButton(
+                        onClick = { showVotingModal = true },
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .size(48.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.votoboton),
+                            contentDescription = "Votar por candidato",
+                            modifier = Modifier.size(48.dp)
+                        )
+                    }
+
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 val hasDenuncias = cand.denuncias.isNotEmpty()
@@ -189,106 +220,161 @@ fun CandidateDetailScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = if (hasDenuncias) "Tiene ${cand.denuncias.size} denuncia(s) registrada(s)" else "No se registran denuncias o investigaciones activas",
+                            text = if (hasDenuncias)
+                                "Tiene ${cand.denuncias.size} denuncia(s) registrada(s)"
+                            else
+                                "No se registran denuncias o investigaciones activas",
                             style = MaterialTheme.typography.bodySmall,
                             color = if (hasDenuncias) ErrorRed else SuccessGreen
                         )
                     }
                 }
 
-                // --- 3. TABS ---
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 TabRow(
                     selectedTabIndex = selectedTab,
                     modifier = Modifier.fillMaxWidth(),
                     containerColor = BackgroundLight,
-                    contentColor = PrimaryBlue
+                    contentColor = PrimaryBlue,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.Indicator(
+                            Modifier
+                                .tabIndicatorOffset(tabPositions[selectedTab])
+                                .height(2.dp),
+                            color = PrimaryBlue
+                        )
+                    }
                 ) {
-                    Tab(
-                        selected = selectedTab == 0,
-                        onClick = { selectedTab = 0 },
-                        text = { Text("Proyectos") }
-                    )
-                    Tab(
-                        selected = selectedTab == 1,
-                        onClick = { selectedTab = 1 },
-                        text = { Text("Historial") }
-                    )
-                    Tab(
-                        selected = selectedTab == 2,
-                        onClick = { selectedTab = 2 },
-                        text = { Text("Fuentes") }
-                    )
+                    val tabs = listOf("Proyectos", "Historial", "Fuentes")
+
+                    tabs.forEachIndexed { index, title ->
+                        Tab(
+                            selected = selectedTab == index,
+                            onClick = { selectedTab = index },
+                            text = {
+                                Text(
+                                    text = title,
+                                    color = if (selectedTab == index) White else PrimaryBlue,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            },
+                            modifier = Modifier
+                                .padding(vertical = 6.dp, horizontal = 8.dp)
+                                .height(32.dp)
+
+                                .background(
+                                    color = if (selectedTab == index) PrimaryBlue else White,
+                                    shape = RoundedCornerShape(50)
+                                )
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Tab Content
                 when (selectedTab) {
                     0 -> ProjectsTabContent(cand.proyectos)
                     1 -> HistorialTabContent(cand.historialPolitico)
                     2 -> FuentesTabContent()
                 }
+            }
+        }
+    }
 
-                // --- 4. COMPARE BUTTON ---
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Button(
-                    onClick = { /* Lógica de Navegación a Comparación */ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = "Comparar con otros candidatos",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = White
-                    )
+    if (showVotingModal) {
+        VotingModal(
+            onDismiss = { 
+                showVotingModal = false
+                votingStep = 0
+            },
+            onConfirm = { 
+                candidate?.let { cand ->
+                    votingViewModel.registrarVoto(cand.id)
+                     votingStep = 2
                 }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-            } // Fin de candidate?.let { cand -> ... }
-
-        } // Fin de Column principal (Scrollable)
-    } // Fin del Contenedor principal
+                showVotingModal = false
+                votingStep = 0
+            },
+            votingStep = votingStep,
+            onStepChange = { votingStep = it }
+        )
+    }
 }
 
-
-// ----------------------------------------------------------------------------------
-// --- Funciones de Contenido de Pestañas ---
-// ----------------------------------------------------------------------------------
+@Composable
+fun VotingModal(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    votingStep: Int,
+    onStepChange: (Int) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = when (votingStep) {
+                    0 -> "¿Votarías por este candidato?"
+                    1 -> "Confirmación"
+                    else -> "¡Voto Registrado!"
+                },
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Text(
+                text = when (votingStep) {
+                    0 -> "Tu voto solo será válido dentro de esta aplicación con fines informativos."
+                    1 -> "¿Estás seguro de votar por este candidato?"
+                    else -> "¡Tu voto ha sido registrado exitosamente! El ranking se actualizará automáticamente."
+                }
+            )
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    when (votingStep) {
+                        0 -> onStepChange(1)
+                        1 -> onConfirm()
+                        else -> onConfirm()
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue)
+            ) {
+                Text(
+                    when (votingStep) {
+                        0 -> "Sí"
+                        1 -> "Confirmar Voto"
+                        else -> "Cerrar"
+                    }, 
+                    color = White
+                )
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
+            ) {
+                Text("Cancelar", color = Black)
+            }
+        }
+    )
+}
 
 @Composable
 fun ProjectsTabContent(proyectos: List<Proyecto>) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = "Proyectos y Propuestas",
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            color = Black
-        )
-
+        Text("Proyectos y Propuestas", fontWeight = FontWeight.Bold, color = Black)
         Spacer(modifier = Modifier.height(12.dp))
-
         proyectos.forEach { proyecto ->
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text("✓", fontSize = 18.sp, color = SuccessGreen)
                 Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = proyecto.nombre,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = DarkGray,
-                    modifier = Modifier.weight(1f)
-                )
+                Text(proyecto.nombre, color = DarkGray)
             }
         }
     }
@@ -297,40 +383,14 @@ fun ProjectsTabContent(proyectos: List<Proyecto>) {
 @Composable
 fun HistorialTabContent(historial: List<HistorialPolitico>) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = "Historial Político",
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            color = Black
-        )
-
+        Text("Historial Político", fontWeight = FontWeight.Bold, color = Black)
         Spacer(modifier = Modifier.height(12.dp))
-
-        historial.forEach { position ->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
-                Text(
-                    text = "${position.cargo} - ${position.institucion}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = DarkGray
-                )
-                Text(
-                    text = "${position.fechaInicio} - ${position.fechaFin ?: "Presente"}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MediumGray
-                )
-                Text(
-                    text = position.descripcion,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = DarkGray
-                )
+        historial.forEach { h ->
+            Column(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                Text("${h.cargo} - ${h.institucion}", fontWeight = FontWeight.SemiBold)
+                Text("${h.fechaInicio} - ${h.fechaFin ?: "Presente"}", color = MediumGray)
+                Text(h.descripcion, color = DarkGray)
             }
-
-            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 }
@@ -338,53 +398,28 @@ fun HistorialTabContent(historial: List<HistorialPolitico>) {
 @Composable
 fun FuentesTabContent() {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = "Fuentes Oficiales",
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            color = Black
-        )
-
+        Text("Fuentes Oficiales", fontWeight = FontWeight.Bold, color = Black)
         Spacer(modifier = Modifier.height(12.dp))
-
-        Text(
-            text = "Verifica la información en las siguientes fuentes oficiales:",
-            style = MaterialTheme.typography.bodySmall,
-            color = MediumGray
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
         val sources = listOf(
             "ONPE - Oficina Nacional de Procesos Electorales",
             "Congreso de la República - Portal del Congreso"
         )
-
-        sources.forEach { source ->
+        sources.forEach { src ->
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 shape = RoundedCornerShape(8.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFEFF6FF)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFEFF6FF))
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
+                    modifier = Modifier.fillMaxWidth().padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("📄", fontSize = androidx.compose.ui.unit.TextUnit(20f, androidx.compose.ui.unit.TextUnitType.Sp))
+                    Text("📄", fontSize = 20.sp)
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text(
-                        text = source,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = PrimaryBlue,
-                        fontWeight = FontWeight.Medium
-                    )
+                    Text(src, color = PrimaryBlue)
                 }
             }
         }
     }
 }
+

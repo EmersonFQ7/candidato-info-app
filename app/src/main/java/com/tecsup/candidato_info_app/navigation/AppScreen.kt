@@ -1,6 +1,8 @@
 package com.tecsup.candidato_info_app.navigation
 
 sealed class AppScreen(val route: String) {
+    object Splash : AppScreen("splash")
+
     object Home : AppScreen("home")
     object CandidateSearch : AppScreen("candidate_search")
     object CandidateDetail : AppScreen("candidate_detail/{candidateId}") {
@@ -8,4 +10,7 @@ sealed class AppScreen(val route: String) {
     }
     object Comparison : AppScreen("comparison")
     object OfficialSources : AppScreen("official_sources")
+    object Ranking : AppScreen("ranking")
+    object News : AppScreen("news")
+    object ImportantData : AppScreen("important_data")
 }

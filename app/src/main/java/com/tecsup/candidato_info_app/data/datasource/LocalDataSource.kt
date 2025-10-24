@@ -1,11 +1,12 @@
 package com.tecsup.candidato_info_app.data.datasource
 
-
 import com.tecsup.candidato_info_app.data.model.*
 import com.tecsup.candidato_info_app.R
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 object LocalDataSource {
-
+    val rankingUpdated: StateFlow<Unit> = VotePersistence.rankingUpdated
     private val proyectos1 = listOf(
         Proyecto(
             id = "p1",
@@ -167,7 +168,7 @@ object LocalDataSource {
             titulo = "Denuncia por nepotismo",
             descripcion = "Presunta contratación de familiares",
             fecha = "2017",
-            estado = "Archivada por falta de pruebas",
+            estado = "cancelado",
             institucion = "Fiscalía Provincial"
         ),
         Denuncia(
@@ -268,7 +269,7 @@ private val proyectos3 = listOf(
             titulo = "Denuncia por nepotismo",
             descripcion = "La Contraloría recomendó denuncia penal por presunto nepotismo al contratar a su sobrino en el Ministerio de la Producción.",
             fecha = "2022-12-27",
-            estado = "En investigación",
+            estado = "resuelto",
             institucion = "Contraloría / Fiscalía de la Nación"
         ),
         Denuncia(
@@ -1179,4 +1180,95 @@ private val proyectos6 = listOf(
     fun getPartidos(): List<String> = candidatos.map { it.partido }.distinct()
 
     fun getRegiones(): List<String> = candidatos.map { it.region }.distinct()
+
+
+    fun getNoticias(): List<Noticia> = listOf(
+        Noticia(
+            id = "noticia_1",
+            titulo = "Jefe de la ONPE supervisa avances en la organización de elecciones",
+            descripcion = "Para atender las Elecciones Primarias, la ONPE ha conformado 14 oficinas descentralizadas...",
+            fecha = "2025-01-15",
+            fotoUrl = "https://cdn.www.gob.pe/uploads/document/file/8876812/1271285-fachada700x395.jpg",
+            fuente = "ONPE"
+        ),
+        Noticia(
+            id = "noticia_2",
+            titulo = "Nuevas regulaciones electorales para 2026",
+            descripcion = "El JNE anuncia cambios importantes en los procesos electorales...",
+            fecha = "2025-01-14",
+            fotoUrl = "https://cdn.www.gob.pe/uploads/document/file/8865165/1269839-jefe-de-la-onpe-supervisa-avances-en-la-organizacion-de-elecciones.jpg",
+            fuente = "JNE"
+        ),
+        Noticia(
+            id = "noticia_3",
+            titulo = "Candidatos presidenciales presentan propuestas de desarrollo",
+            descripcion = "Los principales candidatos presentaron sus planes de gobierno...",
+            fecha = "2025-01-13",
+            fotoUrl = "https://cdn.www.gob.pe/uploads/document/file/8868023/1270287-conadis-premia-a-la-onpe-en-concurso-de-buenas-practicas.jpg",
+            fuente = "Congreso"
+        ),
+
+        Noticia(
+        id = "noticia_4",
+        titulo = "CONADIS premia a la ONPE en concurso de buenas prácticas",
+        descripcion = "Por facilitar la votación de personas con discapacidad...",
+        fecha = "2025-10-22",
+        fotoUrl = "https://cdn.www.gob.pe/uploads/document/file/8865166/1269839-jefe-de-la-onpe-supervisa-avances-en-la-organizacion-de-elecciones.jpg",
+        fuente = "CONADIS"
+    )
+    )
+
+    // Datos importantes
+    fun getDatosImportantes(): List<DatoImportante> = listOf(
+        DatoImportante(
+            id = "dato_1",
+            titulo = "¿Qué se elige?",
+             contenido = "En las elecciones generales de Perú 2026 se elige:\n" +
+                    "• 1 Presidente de la República\n" +
+                    "• 2 Vicepresidentes\n" +
+                    "• 130 Diputados\n" +
+                    "• 60 Senadores\n" +
+                    "• 5 Parlamentarios Andinos",
+         ),
+        DatoImportante(
+            id = "dato_2",
+            titulo = "Fecha y Hora",
+             contenido = "Fecha: 12 de abril de 2026\n" +
+                    "Hora: 7:00 a 17:00\n",
+         ),
+        DatoImportante(
+            id = "dato_3",
+            titulo = "¿Quiénes votan?",
+             contenido = "Pueden votar todos los ciudadanos peruanos mayores de 18 años, con DNI vigente.\n" +
+                    "El voto es obligatorio hasta los 70 años.\n" +
+                    "A partir de los 70 años, el voto es facultativo (opcional).",
+         ),
+        DatoImportante(
+            id = "dato_4",
+            titulo = "Recomendaciones",
+             contenido = "• Llevar DNI vigente\n" +
+                    "• Revisar tu local y mesa de votación antes del día\n" +
+                    "• Evita compartir tu voto o fotografiar la cédula electoral\n" +
+                    "• Llega temprano para evitar aglomeraciones",
+         )
+    )
+
+    // Votacion
+    fun registrarVoto(candidatoId: String) {
+        VotePersistence.registrarVoto(candidatoId)
+    }
+
+    fun obtenerVotosPorCandidato(candidatoId: String): Int {
+        return VotePersistence.obtenerVotosPorCandidato(candidatoId)
+    }
+
+    fun obtenerRankingPorCargo(cargo: String): List<Pair<Candidato, Int>> {
+        val votos = VotePersistence.obtenerVotos()
+        return getAllCandidatos()
+            .filter { it.cargo == cargo }
+            .map { it to (votos[it.id] ?: 0) }
+            .sortedByDescending { it.second }
+            .take(5)
+    }
+
 }

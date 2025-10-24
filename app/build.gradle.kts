@@ -45,12 +45,20 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("com.google.accompanist:accompanist-flowlayout:0.30.1")
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.foundation)
+    implementation(libs.foundation)
     testImplementation(libs.junit)
     implementation("io.coil-kt:coil-compose:2.6.0")
     androidTestImplementation(libs.androidx.junit)
